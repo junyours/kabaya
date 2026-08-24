@@ -807,7 +807,8 @@ export default function Home() {
                     {/* Download buttons */}
                     <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                         <a
-                            href="#"
+                            href="https://drive.google.com/uc?export=download&id=17wFX8zxwXJvTFTCZoe6sOXjYlkuoGx2M"
+                            target="_blank"
                             className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-slate-900 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl"
                         >
                             <Smartphone size={21} />
