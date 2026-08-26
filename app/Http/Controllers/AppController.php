@@ -8,7 +8,6 @@ use App\Models\UserVerification;
 use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Log;
 use Throwable;
@@ -270,10 +269,13 @@ class AppController extends Controller
         Request $request,
         UserVerification $verification
     ) {
+        $validated = $request->validate([
+            'is_resident' => ['required', 'boolean'],
+        ]);
+
         try {
             DB::beginTransaction();
 
-            // Prevent approving something that does not belong to a user.
             $verification->load('user');
 
             if (!$verification->user) {
@@ -285,9 +287,6 @@ class AppController extends Controller
                 ], 404);
             }
 
-            /*
-             * Only pending requests can be approved.
-             */
             if ($verification->status !== 'pending') {
                 DB::rollBack();
 
@@ -298,7 +297,7 @@ class AppController extends Controller
             }
 
             /*
-             * Approve verification.
+             * Approve verification
              */
             $verification->update([
                 'status' => 'approved',
@@ -308,10 +307,11 @@ class AppController extends Controller
             ]);
 
             /*
-             * Fully verified user.
+             * Update resident status
              */
             $verification->user->update([
                 'is_verified' => 1,
+                'is_resident' => $validated['is_resident'],
             ]);
 
             DB::commit();

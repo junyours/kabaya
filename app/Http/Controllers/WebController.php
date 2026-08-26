@@ -11,4 +11,9 @@ class WebController extends Controller
     {
         return Inertia::render('home');
     }
+
+    public function privacyPolicy()
+    {
+        return Inertia::render('privacy-policy');
+    }
 }

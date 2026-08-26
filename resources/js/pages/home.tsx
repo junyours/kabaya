@@ -10,6 +10,8 @@ import {
     Smartphone,
     Users,
 } from "lucide-react";
+import Logo from "../../../public/images/logo.png";
+import WonderfulOpol from "../../../public/images/wonderful-opol.png";
 
 const BRAND = "hsl(346.8 77.2% 49.8%)";
 
@@ -23,27 +25,14 @@ export default function Home() {
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
                     {/* Logo */}
                     <a href="#" className="flex items-center gap-3">
-                        <div
-                            className="relative flex h-11 w-11 items-center justify-center rounded-2xl text-xl font-black text-white"
-                            style={{
-                                backgroundColor: BRAND,
-                                boxShadow: `0 12px 30px ${BRAND}35`,
-                            }}
-                        >
-                            K{/* Logo glow */}
-                            <div
-                                className="absolute -inset-2 -z-10 rounded-2xl blur-xl"
-                                style={{ backgroundColor: `${BRAND}30` }}
-                            />
-                        </div>
+                        <img
+                            src={WonderfulOpol}
+                            alt="wonderful-opol"
+                            className="size-20"
+                        />
 
                         <div>
-                            <h1
-                                className="text-xl font-black tracking-tight"
-                                style={{ color: BRAND }}
-                            >
-                                Kabaya
-                            </h1>
+                            <img src={Logo} alt="logo" className="w-24 h-7" />
 
                             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                                 For Opol Residents
@@ -729,12 +718,11 @@ export default function Home() {
                             <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-white/5" />
 
                             <div className="relative max-w-md">
-                                <div
-                                    className="flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-2xl font-black"
-                                    style={{ color: BRAND }}
-                                >
-                                    K
-                                </div>
+                                <img
+                                    src={WonderfulOpol}
+                                    alt="wonderful-opol"
+                                    className="size-28"
+                                />
 
                                 <h3 className="mt-8 text-3xl font-black text-white">
                                     One app.
@@ -788,11 +776,12 @@ export default function Home() {
 
                 <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
                     {/* Logo */}
-                    <div
-                        className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-white text-2xl font-black shadow-xl"
-                        style={{ color: BRAND }}
-                    >
-                        K
+                    <div className="mx-auto flex items-center justify-center">
+                        <img
+                            src={WonderfulOpol}
+                            alt="wonderful-opol"
+                            className="size-28"
+                        />
                     </div>
 
                     <h2 className="mt-7 text-4xl font-black tracking-tight text-white sm:text-5xl">
@@ -807,7 +796,7 @@ export default function Home() {
                     {/* Download buttons */}
                     <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                         <a
-                            href="https://drive.google.com/uc?export=download&id=17wFX8zxwXJvTFTCZoe6sOXjYlkuoGx2M"
+                            href="https://drive.google.com/uc?export=download&id=1GefbNUr4Y-_x4n1Qm5HCBhoFgN8Leorq"
                             target="_blank"
                             className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-slate-900 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl"
                         >
@@ -845,17 +834,14 @@ export default function Home() {
                 <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between lg:px-8">
                     {/* Logo */}
                     <div className="flex items-center gap-3">
-                        <div
-                            className="flex h-10 w-10 items-center justify-center rounded-xl font-black text-white"
-                            style={{
-                                backgroundColor: BRAND,
-                            }}
-                        >
-                            K
-                        </div>
+                        <img
+                            src={WonderfulOpol}
+                            alt="wonderful-opol"
+                            className="size-20"
+                        />
 
                         <div>
-                            <p className="font-black">Kabaya</p>
+                            <img src={Logo} alt="logo" className="w-24 h-7" />
 
                             <p className="text-xs text-slate-500">
                                 For Opol Residents

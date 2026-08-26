@@ -5,6 +5,7 @@ use App\Http\Controllers\WebController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WebController::class, 'home']);
+Route::get('/privacy-policy', [WebController::class, 'privacyPolicy']);
 
 // web
 Route::middleware(['auth:sanctum'])->group(function () {
