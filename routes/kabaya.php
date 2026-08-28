@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Kabaya\Mobile\App\DemographicController;
 use App\Http\Controllers\Kabaya\Mobile\App\LinkSystemController;
 use App\Http\Controllers\Kabaya\Mobile\App\Services\SBController;
 use App\Http\Controllers\Kabaya\Mobile\App\Settings\ChangePinController;
@@ -49,6 +50,8 @@ Route::middleware(['auth:sanctum'])->group(function () {
   Route::get('/kabaya/mobile/link-systems', [LinkSystemController::class, 'getLinkSystem']);
 
   Route::post('/kabaya/mobile/settings/change-pin', [ChangePinController::class, 'changePin']);
+
+  Route::get('/kabaya/mobile/demographics', [DemographicController::class, 'index']);
 });
 
 Route::middleware(['guest'])->group(function () {
