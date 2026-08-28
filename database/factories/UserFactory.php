@@ -25,7 +25,7 @@ class UserFactory extends Factory
     {
         return [
             'user_name' => 'kabaya',
-            'role' => 'admin',
+            'role' => 'super_admin',
             'password' => Hash::make('P@ssw0rd'),
         ];
     }

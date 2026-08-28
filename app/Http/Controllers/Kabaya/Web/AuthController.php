@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Kabaya\Web;
 
+use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -24,6 +25,10 @@ class AuthController extends Controller
         $request->authenticate();
 
         $request->session()->regenerate();
+
+        if (Auth::user()->role === 'super_admin') {
+            return redirect('/super-admin/dashboard');
+        }
 
         return redirect("/dashboard");
     }

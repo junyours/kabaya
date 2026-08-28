@@ -58,7 +58,7 @@ export function AppSidebar() {
 
             {/* Navigation */}
             <SidebarContent className="px-2 py-3">
-                <NavItem />
+                <NavItem user={user} />
             </SidebarContent>
 
             {/* User */}

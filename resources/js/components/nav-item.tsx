@@ -1,4 +1,11 @@
-import { LayoutDashboard, LinkIcon, UserCheck, Users } from "lucide-react";
+import {
+    KeyRound,
+    LayoutDashboard,
+    LinkIcon,
+    UserCheck,
+    Users,
+    type LucideIcon,
+} from "lucide-react";
 import {
     SidebarGroup,
     SidebarGroupLabel,
@@ -10,7 +17,51 @@ import {
 import { Link, usePage } from "@inertiajs/react";
 import { useIsMobile } from "@/hooks/use-mobile";
 
-const navItems = [
+type NavItem = {
+    title: string;
+    url: string;
+    icon: LucideIcon;
+};
+
+type NavGroup = {
+    name: string;
+    items: NavItem[];
+};
+
+const navSuperAdmin: NavGroup[] = [
+    {
+        name: "Main",
+        items: [
+            {
+                title: "Dashboard",
+                url: "/super-admin/dashboard",
+                icon: LayoutDashboard,
+            },
+        ],
+    },
+    {
+        name: "Users",
+        items: [
+            {
+                title: "Admin",
+                url: "/super-admin/users/admin",
+                icon: Users,
+            },
+        ],
+    },
+    {
+        name: "Clients",
+        items: [
+            {
+                title: "Keys",
+                url: "/super-admin/clients/keys",
+                icon: KeyRound,
+            },
+        ],
+    },
+];
+
+const navAdmin: NavGroup[] = [
     {
         name: "Main",
         items: [
@@ -53,16 +104,24 @@ const navItems = [
     },
 ];
 
-export default function NavItem() {
+export default function NavItem({
+    user,
+}: {
+    user: {
+        role: string;
+    };
+}) {
     const { setOpenMobile } = useSidebar();
     const isMobile = useIsMobile();
     const { url } = usePage();
+
+    const navItems: NavGroup[] =
+        user.role === "super_admin" ? navSuperAdmin : navAdmin;
 
     return (
         <div className="space-y-5">
             {navItems.map((group) => (
                 <SidebarGroup key={group.name} className="p-0">
-                    {/* Group title */}
                     <SidebarGroupLabel
                         className="
                             mb-1 px-3
@@ -81,6 +140,8 @@ export default function NavItem() {
                             const isActive =
                                 url === item.url ||
                                 url.startsWith(`${item.url}/`);
+
+                            const Icon = item.icon;
 
                             return (
                                 <SidebarMenuItem
@@ -114,7 +175,6 @@ export default function NavItem() {
                                         "
                                     >
                                         <Link href={item.url}>
-                                            {/* Active indicator */}
                                             <span
                                                 className="
                                                     absolute
@@ -131,7 +191,7 @@ export default function NavItem() {
                                                 "
                                             />
 
-                                            <item.icon
+                                            <Icon
                                                 className="
                                                     size-[18px]
                                                     shrink-0

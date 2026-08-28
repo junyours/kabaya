@@ -1,8 +1,14 @@
 export interface User {
     id: number;
     user_name: string;
+    role: string;
     email: string;
     email_verified_at?: string;
+}
+
+interface ApiClient {
+    id: number;
+    key: string;
 }
 
 export type PageProps<
@@ -11,4 +17,5 @@ export type PageProps<
     auth: {
         user: User;
     };
+    apiClient?: ApiClient | null;
 };

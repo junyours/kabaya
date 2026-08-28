@@ -19,6 +19,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         $middleware->alias([
             'role' => \App\Http\Middleware\Role::class,
+            'external.api' => \App\Http\Middleware\ExternalApiAuthentication::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
