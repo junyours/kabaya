@@ -796,7 +796,7 @@ export default function Home() {
                     {/* Download buttons */}
                     <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                         <a
-                            href="https://drive.google.com/uc?export=download&id=1GefbNUr4Y-_x4n1Qm5HCBhoFgN8Leorq"
+                            href="https://drive.google.com/uc?export=download&id=1Fm4UQRyZlKn_gRDcDY3FuwPvl09OP0jI"
                             target="_blank"
                             className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-slate-900 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl"
                         >
