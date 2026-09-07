@@ -165,6 +165,8 @@ class UserController extends Controller
 
             'email' => $validated['email'],
 
+            'email_verified_at' => now(),
+
             /*
              * Automatically admin.
              */
@@ -216,5 +218,85 @@ class UserController extends Controller
              */
             'temporary_password' => $password,
         ], 201);
+    }
+
+    public function updateAdmin(Request $request, $id)
+    {
+        $admin = User::where('id', $id)
+            ->where('role', 'admin')
+            ->firstOrFail();
+
+        $validated = $request->validate([
+            'first_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'middle_name' => [
+                'nullable',
+                'string',
+                'max:255',
+            ],
+
+            'last_name' => [
+                'required',
+                'string',
+                'max:255',
+            ],
+
+            'suffix' => [
+                'nullable',
+                'string',
+                'max:50',
+            ],
+
+            'user_name' => [
+                'required',
+                'string',
+                'max:255',
+                'unique:users,user_name,' . $admin->id,
+            ],
+
+            'email' => [
+                'required',
+                'email',
+                'max:255',
+                'unique:users,email,' . $admin->id,
+            ],
+        ]);
+
+        $admin->update([
+            'first_name' => $validated['first_name'],
+
+            'middle_name' =>
+                $validated['middle_name'] ?: null,
+
+            'last_name' => $validated['last_name'],
+
+            'suffix' =>
+                $validated['suffix'] ?: null,
+
+            'user_name' => $validated['user_name'],
+
+            'email' => $validated['email'],
+        ]);
+
+        return response()->json([
+            'success' => true,
+
+            'message' =>
+                'Admin account updated successfully.',
+
+            'data' => [
+                'id' => $admin->id,
+                'first_name' => $admin->first_name,
+                'middle_name' => $admin->middle_name,
+                'last_name' => $admin->last_name,
+                'suffix' => $admin->suffix,
+                'user_name' => $admin->user_name,
+                'email' => $admin->email,
+            ],
+        ]);
     }
 }

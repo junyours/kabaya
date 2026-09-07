@@ -1,4 +1,4 @@
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { ChevronsUpDown, Key, LogOut } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
     DropdownMenu,
@@ -86,6 +86,15 @@ export function NavUser({
                                 </div>
                             </div>
                         </DropdownMenuLabel>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem
+                            onClick={() =>
+                                router.visit("/settings/change-password")
+                            }
+                        >
+                            <Key />
+                            Change Password
+                        </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
                             onClick={() => router.post(route("logout"))}

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AppController;
+use App\Http\Controllers\Kabaya\Web\Settings\ChangePasswordController;
 use App\Http\Controllers\Kabaya\Web\SuperAdmin\ClientController;
 use App\Http\Controllers\Kabaya\Web\SuperAdmin\DashboardController;
 use App\Http\Controllers\Kabaya\Web\SuperAdmin\UserController;
@@ -19,6 +20,7 @@ Route::middleware(['auth:sanctum', 'role:super_admin'])->prefix('super-admin')->
   Route::get('/users/admin', [UserController::class, 'admin']);
   Route::get('/users/get-admin', [UserController::class, 'getAdmin']);
   Route::post('/users/add-admin', [UserController::class, 'addAdmin']);
+  Route::post('/users/update-admin/{id}', [UserController::class, 'updateAdmin']);
 });
 
 Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
@@ -42,6 +44,11 @@ Route::middleware(['auth:sanctum', 'role:admin'])->group(function () {
   Route::get('/api/requests/user-verifications/{user}', [AppController::class, 'getUserVerificationDetails']);
   Route::post('/api/requests/user-verifications/{verification}/approve', [AppController::class, 'approveUserVerification']);
   Route::post('/api/requests/user-verifications/{verification}/reject', [AppController::class, 'rejectUserVerification']);
+});
+
+Route::middleware(['auth:sanctum'])->prefix('settings')->group(function () {
+  Route::get('/change-password', [ChangePasswordController::class, 'index']);
+  Route::post('/change-password', [ChangePasswordController::class, 'store']);
 });
 
 require __DIR__ . '/auth.php';

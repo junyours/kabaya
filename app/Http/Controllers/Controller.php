@@ -33,7 +33,7 @@ abstract class Controller
       'expired_at' => Carbon::now()->addMinutes(3),
     ]);
 
-    Mail::to($user->email)->send(new OtpMail($otp));
+    // Mail::to($user->email)->send(new OtpMail($otp));
   }
 
   public function verify($data)

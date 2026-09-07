@@ -2,15 +2,18 @@ import AppLayout from "@/layouts/app-layout";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
 import axios from "axios";
+
 import {
     Check,
     Clipboard,
     Loader2,
     MoreHorizontal,
+    Pencil,
     Plus,
     ShieldCheck,
     UserRound,
 } from "lucide-react";
+
 import { ReactNode, useState } from "react";
 
 import { DataTable } from "@/components/table/data-table";
@@ -126,7 +129,15 @@ type AdminForm = z.infer<typeof adminSchema>;
 export default function Admin() {
     const queryClient = useQueryClient();
 
+    /*
+    |--------------------------------------------------------------------------
+    | States
+    |--------------------------------------------------------------------------
+    */
+
     const [openSheet, setOpenSheet] = useState(false);
+
+    const [selectedAdmin, setSelectedAdmin] = useState<Admin | null>(null);
 
     const [page, setPage] = useState(1);
 
@@ -168,49 +179,34 @@ export default function Admin() {
 
     /*
     |--------------------------------------------------------------------------
-    | Open Sheet
+    | Fetch Admins
     |--------------------------------------------------------------------------
     */
 
-    const handleOpenSheet = () => {
-        clearErrors();
+    const fetchAdmins = async ({
+        queryKey,
+    }: {
+        queryKey: readonly unknown[];
+    }) => {
+        const [, currentPage, currentSearch] = queryKey;
 
-        reset({
-            first_name: "",
-            middle_name: "",
-            last_name: "",
-            suffix: "",
-            user_name: "",
-            email: "",
+        const response = await axios.get("/super-admin/users/get-admin", {
+            params: {
+                page: currentPage,
+                search: currentSearch,
+            },
         });
 
-        setOpenSheet(true);
+        return response.data;
     };
 
-    /*
-    |--------------------------------------------------------------------------
-    | Close Sheet
-    |--------------------------------------------------------------------------
-    */
+    const { data, isLoading, isFetching } = useQuery({
+        queryKey: ["admins", page, search],
 
-    const handleCloseSheet = () => {
-        if (createMutation.isPending) {
-            return;
-        }
+        queryFn: fetchAdmins,
 
-        setOpenSheet(false);
-
-        clearErrors();
-
-        reset({
-            first_name: "",
-            middle_name: "",
-            last_name: "",
-            suffix: "",
-            user_name: "",
-            email: "",
-        });
-    };
+        placeholderData: (previousData) => previousData,
+    });
 
     /*
     |--------------------------------------------------------------------------
@@ -233,12 +229,11 @@ export default function Admin() {
                 queryKey: ["admins"],
             });
 
-            /*
-             * Get generated password from backend.
-             */
             setGeneratedPassword(response?.temporary_password ?? null);
 
             setOpenSheet(false);
+
+            setSelectedAdmin(null);
 
             reset({
                 first_name: "",
@@ -273,7 +268,154 @@ export default function Admin() {
         },
     });
 
-    const processing = createMutation.isPending;
+    /*
+    |--------------------------------------------------------------------------
+    | Update Admin
+    |--------------------------------------------------------------------------
+    */
+
+    const updateMutation = useMutation({
+        mutationFn: async ({
+            id,
+            formData,
+        }: {
+            id: number;
+            formData: AdminForm;
+        }) => {
+            const response = await axios.post(
+                `/super-admin/users/update-admin/${id}`,
+                formData,
+            );
+
+            return response.data;
+        },
+
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ["admins"],
+            });
+
+            setOpenSheet(false);
+
+            setSelectedAdmin(null);
+
+            reset({
+                first_name: "",
+                middle_name: "",
+                last_name: "",
+                suffix: "",
+                user_name: "",
+                email: "",
+            });
+
+            toast.success("Admin account updated successfully.");
+        },
+
+        onError: (error: any) => {
+            const serverErrors = error?.response?.data?.errors;
+
+            if (serverErrors) {
+                Object.keys(serverErrors).forEach((field) => {
+                    setError(field as keyof AdminForm, {
+                        type: "server",
+                        message: serverErrors[field][0],
+                    });
+                });
+
+                return;
+            }
+
+            toast.error(
+                error?.response?.data?.message ??
+                    "Something went wrong while updating the admin account.",
+            );
+        },
+    });
+
+    /*
+    |--------------------------------------------------------------------------
+    | Processing
+    |--------------------------------------------------------------------------
+    */
+
+    const processing = createMutation.isPending || updateMutation.isPending;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Open Create Sheet
+    |--------------------------------------------------------------------------
+    */
+
+    const handleOpenSheet = () => {
+        setSelectedAdmin(null);
+
+        setGeneratedPassword(null);
+
+        clearErrors();
+
+        reset({
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            suffix: "",
+            user_name: "",
+            email: "",
+        });
+
+        setOpenSheet(true);
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Open Edit Sheet
+    |--------------------------------------------------------------------------
+    */
+
+    const handleEditAdmin = (admin: Admin) => {
+        setSelectedAdmin(admin);
+
+        setGeneratedPassword(null);
+
+        clearErrors();
+
+        reset({
+            first_name: admin.first_name ?? "",
+            middle_name: admin.middle_name ?? "",
+            last_name: admin.last_name ?? "",
+            suffix: admin.suffix ?? "",
+            user_name: admin.user_name ?? "",
+            email: admin.email ?? "",
+        });
+
+        setOpenSheet(true);
+    };
+
+    /*
+    |--------------------------------------------------------------------------
+    | Close Sheet
+    |--------------------------------------------------------------------------
+    */
+
+    const handleCloseSheet = () => {
+        if (processing) {
+            return;
+        }
+
+        setOpenSheet(false);
+
+        setSelectedAdmin(null);
+
+        clearErrors();
+
+        reset({
+            first_name: "",
+            middle_name: "",
+            last_name: "",
+            suffix: "",
+            user_name: "",
+            email: "",
+        });
+    };
 
     /*
     |--------------------------------------------------------------------------
@@ -282,39 +424,17 @@ export default function Admin() {
     */
 
     const onSubmit = (formData: AdminForm) => {
+        if (selectedAdmin) {
+            updateMutation.mutate({
+                id: selectedAdmin.id,
+                formData,
+            });
+
+            return;
+        }
+
         createMutation.mutate(formData);
     };
-
-    /*
-    |--------------------------------------------------------------------------
-    | Fetch Admins
-    |--------------------------------------------------------------------------
-    */
-
-    const fetchAdmins = async ({
-        queryKey,
-    }: {
-        queryKey: readonly unknown[];
-    }) => {
-        const [, currentPage, currentSearch] = queryKey;
-
-        const response = await axios.get("/super-admin/users/get-admin", {
-            params: {
-                page: currentPage,
-                search: currentSearch,
-            },
-        });
-
-        return response.data;
-    };
-
-    const { data, isLoading, isFetching } = useQuery({
-        queryKey: ["admins", page, search],
-
-        queryFn: fetchAdmins,
-
-        placeholderData: (previousData) => previousData,
-    });
 
     /*
     |--------------------------------------------------------------------------
@@ -517,6 +637,13 @@ export default function Admin() {
                                 <DropdownMenuSeparator />
 
                                 <DropdownMenuItem
+                                    onClick={() => handleEditAdmin(admin)}
+                                >
+                                    <Pencil className="size-4" />
+                                    Edit Admin
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem
                                     onClick={() => {
                                         toast.info(
                                             `Admin account: ${admin.user_name}`,
@@ -524,7 +651,7 @@ export default function Admin() {
                                     }}
                                 >
                                     <UserRound className="size-4" />
-                                    View account
+                                    View Account
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -544,6 +671,7 @@ export default function Admin() {
         <>
             <div className="space-y-5">
                 {/* Header */}
+
                 <div className="flex flex-col gap-1">
                     <h1 className="text-xl font-semibold tracking-tight">
                         Admin Accounts
@@ -555,6 +683,7 @@ export default function Admin() {
                 </div>
 
                 {/* Table */}
+
                 <Card className="overflow-hidden border-border/60 shadow-sm">
                     <div className="p-4 sm:p-6">
                         <DataTable
@@ -583,6 +712,7 @@ export default function Admin() {
                 </Card>
 
                 {/* Generated Password */}
+
                 {generatedPassword && (
                     <Card className="border-primary/30">
                         <div className="p-5 sm:p-6">
@@ -657,7 +787,8 @@ export default function Admin() {
                 )}
             </div>
 
-            {/* Add Admin Sheet */}
+            {/* Add / Edit Admin Sheet */}
+
             <Sheet
                 open={openSheet}
                 onOpenChange={(open) => {
@@ -671,12 +802,14 @@ export default function Admin() {
                     className="flex w-full flex-col p-0 sm:max-w-md"
                 >
                     <SheetHeader className="border-b px-6 py-5">
-                        <SheetTitle className="text-lg">Add Admin</SheetTitle>
+                        <SheetTitle className="text-lg">
+                            {selectedAdmin ? "Edit Admin" : "Add Admin"}
+                        </SheetTitle>
 
                         <SheetDescription>
-                            Create a new administrator account. The role,
-                            verification, and password are automatically
-                            configured.
+                            {selectedAdmin
+                                ? "Update the administrator account information."
+                                : "Create a new administrator account. The role, verification, and password are automatically configured."}
                         </SheetDescription>
                     </SheetHeader>
 
@@ -687,6 +820,7 @@ export default function Admin() {
                         <div className="flex-1 overflow-y-auto">
                             <div className="space-y-7 px-6 py-6">
                                 {/* Personal Information */}
+
                                 <div className="space-y-5">
                                     <div>
                                         <h3 className="text-sm font-semibold">
@@ -700,6 +834,7 @@ export default function Admin() {
                                     </div>
 
                                     {/* First Name */}
+
                                     <div className="space-y-2">
                                         <Label htmlFor="first_name">
                                             First Name
@@ -718,6 +853,7 @@ export default function Admin() {
                                     </div>
 
                                     {/* Middle Name */}
+
                                     <div className="space-y-2">
                                         <Label htmlFor="middle_name">
                                             Middle Name
@@ -741,6 +877,7 @@ export default function Admin() {
                                     </div>
 
                                     {/* Last Name */}
+
                                     <div className="space-y-2">
                                         <Label htmlFor="last_name">
                                             Last Name
@@ -759,6 +896,7 @@ export default function Admin() {
                                     </div>
 
                                     {/* Suffix */}
+
                                     <div className="space-y-2">
                                         <Label htmlFor="suffix">
                                             Suffix
@@ -783,6 +921,7 @@ export default function Admin() {
                                 <div className="border-t" />
 
                                 {/* Account Information */}
+
                                 <div className="space-y-5">
                                     <div>
                                         <h3 className="text-sm font-semibold">
@@ -796,6 +935,7 @@ export default function Admin() {
                                     </div>
 
                                     {/* Username */}
+
                                     <div className="space-y-2">
                                         <Label htmlFor="user_name">
                                             Username
@@ -815,6 +955,7 @@ export default function Admin() {
                                     </div>
 
                                     {/* Email */}
+
                                     <div className="space-y-2">
                                         <Label htmlFor="email">
                                             Email Address
@@ -835,32 +976,63 @@ export default function Admin() {
                                     </div>
 
                                     {/* Automatic Configuration */}
-                                    <div className="rounded-xl border bg-muted/30 p-4">
-                                        <div className="flex gap-3">
-                                            <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                                                <ShieldCheck className="size-4" />
-                                            </div>
 
-                                            <div>
-                                                <p className="text-sm font-medium">
-                                                    Automatic Account Setup
-                                                </p>
+                                    {!selectedAdmin && (
+                                        <div className="rounded-xl border bg-muted/30 p-4">
+                                            <div className="flex gap-3">
+                                                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                                    <ShieldCheck className="size-4" />
+                                                </div>
 
-                                                <p className="mt-1 text-xs leading-5 text-muted-foreground">
-                                                    This account will
-                                                    automatically be assigned
-                                                    the Admin role, marked as
-                                                    verified, and receive a
-                                                    secure generated password.
-                                                </p>
+                                                <div>
+                                                    <p className="text-sm font-medium">
+                                                        Automatic Account Setup
+                                                    </p>
+
+                                                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                                                        This account will
+                                                        automatically be
+                                                        assigned the Admin role,
+                                                        marked as verified, and
+                                                        receive a secure
+                                                        generated password.
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    )}
+
+                                    {/* Edit Information */}
+
+                                    {selectedAdmin && (
+                                        <div className="rounded-xl border bg-primary/5 p-4">
+                                            <div className="flex gap-3">
+                                                <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                                                    <Pencil className="size-4" />
+                                                </div>
+
+                                                <div>
+                                                    <p className="text-sm font-medium">
+                                                        Editing Account
+                                                    </p>
+
+                                                    <p className="mt-1 text-xs leading-5 text-muted-foreground">
+                                                        Update the
+                                                        administrator's personal
+                                                        and account information.
+                                                        The password will not be
+                                                        changed.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         </div>
 
                         {/* Footer */}
+
                         <SheetFooter className="border-t px-6 py-4">
                             <div className="flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                                 <Button
@@ -881,7 +1053,15 @@ export default function Admin() {
                                     {processing ? (
                                         <>
                                             <Loader2 className="size-4 animate-spin" />
-                                            Creating...
+
+                                            {selectedAdmin
+                                                ? "Updating..."
+                                                : "Creating..."}
+                                        </>
+                                    ) : selectedAdmin ? (
+                                        <>
+                                            <Pencil className="size-4" />
+                                            Save Changes
                                         </>
                                     ) : (
                                         <>
