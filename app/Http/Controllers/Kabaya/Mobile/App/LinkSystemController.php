@@ -15,6 +15,7 @@ class LinkSystemController extends Controller
             'icon',
             'href',
             'is_active',
+            'is_open',
         )
             ->get();
 

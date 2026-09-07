@@ -40,6 +40,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
@@ -53,6 +54,7 @@ type System = {
     icon: string;
     href: string;
     is_active: boolean;
+    is_open: boolean;
 };
 
 const systemSchema = z.object({
@@ -67,6 +69,8 @@ const systemSchema = z.object({
         .url("Please enter a valid web link."),
 
     is_active: z.string().min(1, "Please select a status."),
+
+    is_open: z.boolean(),
 });
 
 type SystemForm = z.infer<typeof systemSchema>;
@@ -79,13 +83,21 @@ export default function LinkSystem() {
     const [search, setSearch] = useState("");
     const [editingSystem, setEditingSystem] = useState<System | null>(null);
 
+    /*
+     * ----------------------------------------
+     * Form
+     * ----------------------------------------
+     */
+
     const systemForm = useForm<SystemForm>({
         resolver: zodResolver(systemSchema),
+
         defaultValues: {
             label: "",
             icon: "",
             href: "",
             is_active: "",
+            is_open: false,
         },
     });
 
@@ -100,6 +112,15 @@ export default function LinkSystem() {
     } = systemForm;
 
     const selectedIcon = watch("icon");
+    const isOpen = watch("is_open");
+
+    /*
+     * ----------------------------------------
+     * Processing
+     * ----------------------------------------
+     */
+
+    const processing = false;
 
     /*
      * ----------------------------------------
@@ -118,6 +139,7 @@ export default function LinkSystem() {
                 icon: "",
                 href: system.href,
                 is_active: system.is_active ? "1" : "0",
+                is_open: Boolean(system.is_open),
             });
         } else {
             setEditingSystem(null);
@@ -127,6 +149,7 @@ export default function LinkSystem() {
                 icon: "",
                 href: "",
                 is_active: "",
+                is_open: false,
             });
         }
 
@@ -134,7 +157,7 @@ export default function LinkSystem() {
     };
 
     const handleCloseSheet = () => {
-        if (processing) {
+        if (addMutation.isPending || updateMutation.isPending) {
             return;
         }
 
@@ -147,6 +170,7 @@ export default function LinkSystem() {
             icon: "",
             href: "",
             is_active: "",
+            is_open: false,
         });
     };
 
@@ -158,9 +182,20 @@ export default function LinkSystem() {
 
     const addMutation = useMutation({
         mutationFn: async (formData: SystemForm) => {
+            const payload = new FormData();
+
+            payload.append("label", formData.label);
+            payload.append("href", formData.href);
+            payload.append("is_active", formData.is_active);
+            payload.append("is_open", formData.is_open ? "1" : "0");
+
+            if (formData.icon instanceof File) {
+                payload.append("icon", formData.icon);
+            }
+
             const response = await axios.post(
                 "/api/services/add/link-systems",
-                formData,
+                payload,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -184,6 +219,7 @@ export default function LinkSystem() {
                 icon: "",
                 href: "",
                 is_active: "",
+                is_open: false,
             });
 
             toast.success("Link system added successfully.");
@@ -215,9 +251,20 @@ export default function LinkSystem() {
 
     const updateMutation = useMutation({
         mutationFn: async (formData: SystemForm) => {
+            const payload = new FormData();
+
+            payload.append("label", formData.label);
+            payload.append("href", formData.href);
+            payload.append("is_active", formData.is_active);
+            payload.append("is_open", formData.is_open ? "1" : "0");
+
+            if (formData.icon instanceof File) {
+                payload.append("icon", formData.icon);
+            }
+
             const response = await axios.post(
                 `/api/services/update/link-systems/${editingSystem?.id}`,
-                formData,
+                payload,
                 {
                     headers: {
                         "Content-Type": "multipart/form-data",
@@ -241,6 +288,7 @@ export default function LinkSystem() {
                 icon: "",
                 href: "",
                 is_active: "",
+                is_open: false,
             });
 
             toast.success("Link system updated successfully.");
@@ -264,7 +312,7 @@ export default function LinkSystem() {
         },
     });
 
-    const processing = addMutation.isPending || updateMutation.isPending;
+    const isProcessing = addMutation.isPending || updateMutation.isPending;
 
     /*
      * ----------------------------------------
@@ -330,6 +378,9 @@ export default function LinkSystem() {
      */
 
     const columns: ColumnDef<System>[] = [
+        /*
+         * System
+         */
         {
             accessorKey: "icon",
             header: "System",
@@ -365,6 +416,9 @@ export default function LinkSystem() {
             },
         },
 
+        /*
+         * Web Link
+         */
         {
             accessorKey: "href",
             header: "Web Link",
@@ -397,6 +451,9 @@ export default function LinkSystem() {
             },
         },
 
+        /*
+         * Active Status
+         */
         {
             accessorKey: "is_active",
             header: "Status",
@@ -429,6 +486,44 @@ export default function LinkSystem() {
             },
         },
 
+        /*
+         * Open / Closed
+         */
+        {
+            accessorKey: "is_open",
+            header: "Access",
+
+            cell: ({ row }) => {
+                const system = row.original;
+
+                return (
+                    <Badge
+                        variant="outline"
+                        className={cn(
+                            "gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
+                            system.is_open
+                                ? "border-primary/20 bg-primary/10 text-primary"
+                                : "border-muted-foreground/20 bg-muted text-muted-foreground",
+                        )}
+                    >
+                        <span
+                            className={cn(
+                                "size-1.5 rounded-full",
+                                system.is_open
+                                    ? "bg-primary"
+                                    : "bg-muted-foreground",
+                            )}
+                        />
+
+                        {system.is_open ? "Open Access" : "Verified Only"}
+                    </Badge>
+                );
+            },
+        },
+
+        /*
+         * Actions
+         */
         {
             id: "actions",
             header: "",
@@ -477,7 +572,7 @@ export default function LinkSystem() {
 
     /*
      * ----------------------------------------
-     * Icon preview
+     * Icon Preview
      * ----------------------------------------
      */
 
@@ -488,13 +583,18 @@ export default function LinkSystem() {
               ? `https://lh3.googleusercontent.com/d/${editingSystem.icon}`
               : null;
 
+    /*
+     * Cleanup preview URL
+     */
     useEffect(() => {
-        return () => {
-            if (selectedIcon instanceof File) {
-                const preview = URL.createObjectURL(selectedIcon);
+        if (!(selectedIcon instanceof File)) {
+            return;
+        }
 
-                URL.revokeObjectURL(preview);
-            }
+        const preview = URL.createObjectURL(selectedIcon);
+
+        return () => {
+            URL.revokeObjectURL(preview);
         };
     }, [selectedIcon]);
 
@@ -548,7 +648,10 @@ export default function LinkSystem() {
                 </Card>
             </div>
 
+            {/* ---------------------------------------- */}
             {/* Add / Edit Sheet */}
+            {/* ---------------------------------------- */}
+
             <Sheet
                 open={openSheet}
                 onOpenChange={(open) => {
@@ -561,6 +664,7 @@ export default function LinkSystem() {
                     side="right"
                     className="flex w-full flex-col p-0 sm:max-w-md"
                 >
+                    {/* Header */}
                     <SheetHeader className="border-b px-6 py-5">
                         <SheetTitle className="text-lg">
                             {editingSystem
@@ -575,9 +679,13 @@ export default function LinkSystem() {
                         </SheetDescription>
                     </SheetHeader>
 
+                    {/* Content */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="space-y-7 px-6 py-6">
+                            {/* ---------------------------------------- */}
                             {/* Icon */}
+                            {/* ---------------------------------------- */}
+
                             <div className="space-y-3">
                                 <div>
                                     <Label className="text-sm font-medium">
@@ -606,7 +714,7 @@ export default function LinkSystem() {
                                         <Input
                                             type="file"
                                             accept="image/png,image/jpeg,image/webp"
-                                            disabled={processing}
+                                            disabled={isProcessing}
                                             onChange={(e) => {
                                                 const file =
                                                     e.target.files?.[0];
@@ -636,7 +744,10 @@ export default function LinkSystem() {
 
                             <div className="border-t" />
 
+                            {/* ---------------------------------------- */}
                             {/* System Information */}
+                            {/* ---------------------------------------- */}
+
                             <div className="space-y-5">
                                 <div>
                                     <h3 className="text-sm font-semibold">
@@ -657,7 +768,7 @@ export default function LinkSystem() {
                                         id="label"
                                         placeholder="e.g. Student Portal"
                                         value={watch("label")}
-                                        disabled={processing}
+                                        disabled={isProcessing}
                                         onChange={(e) =>
                                             setValue("label", e.target.value, {
                                                 shouldValidate: true,
@@ -679,7 +790,7 @@ export default function LinkSystem() {
                                         type="url"
                                         placeholder="https://example.com"
                                         value={watch("href")}
-                                        disabled={processing}
+                                        disabled={isProcessing}
                                         onChange={(e) =>
                                             setValue("href", e.target.value, {
                                                 shouldValidate: true,
@@ -698,7 +809,7 @@ export default function LinkSystem() {
 
                                     <Select
                                         value={watch("is_active")}
-                                        disabled={processing}
+                                        disabled={isProcessing}
                                         onValueChange={(value) =>
                                             setValue("is_active", value, {
                                                 shouldValidate: true,
@@ -730,17 +841,78 @@ export default function LinkSystem() {
                                         message={errors.is_active?.message}
                                     />
                                 </div>
+
+                                {/* Access Control */}
+                                <div
+                                    className={cn(
+                                        "rounded-xl border p-4 transition-colors",
+                                        isOpen
+                                            ? "border-primary/30 bg-primary/5"
+                                            : "bg-muted/20",
+                                    )}
+                                >
+                                    <div className="flex items-start gap-3">
+                                        <Checkbox
+                                            id="is_open"
+                                            checked={isOpen}
+                                            disabled={isProcessing}
+                                            onCheckedChange={(checked) =>
+                                                setValue(
+                                                    "is_open",
+                                                    checked === true,
+                                                    {
+                                                        shouldValidate: true,
+                                                    },
+                                                )
+                                            }
+                                            className="mt-0.5"
+                                        />
+
+                                        <div className="space-y-1">
+                                            <Label
+                                                htmlFor="is_open"
+                                                className="cursor-pointer text-sm font-medium"
+                                            >
+                                                Accessible to All Users
+                                            </Label>
+
+                                            <p className="text-xs leading-relaxed text-muted-foreground">
+                                                When enabled, this system can be
+                                                accessed by all users, including
+                                                not verified, semi-verified, and
+                                                fully verified users.
+                                            </p>
+
+                                            <div className="pt-1">
+                                                <Badge
+                                                    variant="outline"
+                                                    className={cn(
+                                                        "rounded-full text-[11px]",
+                                                        isOpen
+                                                            ? "border-primary/20 bg-primary/10 text-primary"
+                                                            : "border-muted-foreground/20 bg-muted text-muted-foreground",
+                                                    )}
+                                                >
+                                                    {isOpen
+                                                        ? "All Users"
+                                                        : "Verified Users Only"}
+                                                </Badge>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
 
+                    {/* Footer */}
                     <SheetFooter className="border-t px-6 py-4">
                         <div className="flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                             <Button
                                 type="button"
                                 variant="outline"
                                 onClick={handleCloseSheet}
-                                disabled={processing}
+                                disabled={isProcessing}
                                 className="w-full sm:w-auto"
                             >
                                 Cancel
@@ -749,10 +921,10 @@ export default function LinkSystem() {
                             <Button
                                 type="button"
                                 onClick={handleSubmit(onSubmit)}
-                                disabled={processing}
+                                disabled={isProcessing}
                                 className="w-full sm:w-auto"
                             >
-                                {processing ? (
+                                {isProcessing ? (
                                     <>
                                         <Loader2 className="size-4 animate-spin" />
 

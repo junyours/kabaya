@@ -13,5 +13,6 @@ class LinkSystem extends Model
         'icon',
         'href',
         'is_active',
+        'is_open',
     ];
 }

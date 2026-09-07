@@ -68,6 +68,7 @@ class AppController extends Controller
             'icon',
             'href',
             'is_active',
+            'is_open',
         )
             ->when($search, function ($query) use ($search) {
                 $query->where(function ($q) use ($search) {
@@ -84,16 +85,21 @@ class AppController extends Controller
         $accessToken = $this->token();
 
         $data = $request->validate([
-            'label' => ['required'],
-            'icon' => ['required', 'image', 'mimes:jpg,jpeg,png'],
-            'href' => ['required'],
-            'is_active' => ['required'],
+            'label' => ['required', 'string'],
+            'icon' => ['required', 'image', 'mimes:jpg,jpeg,png,webp'],
+            'href' => ['required', 'url'],
+            'is_active' => ['required', 'boolean'],
+            'is_open' => ['required', 'boolean'],
         ]);
 
         if ($request->hasFile('icon')) {
             $folderId = config('services.google.link_system_folder_id');
 
-            $parentFolderId = $this->getOrCreateFolder($accessToken, 'icons', $folderId);
+            $parentFolderId = $this->getOrCreateFolder(
+                $accessToken,
+                'icons',
+                $folderId
+            );
 
             $file = $request->file('icon');
             $mimeType = $file->getMimeType();
@@ -104,21 +110,43 @@ class AppController extends Controller
             ];
 
             $uploadResponse = Http::withToken($accessToken)
-                ->attach('metadata', json_encode($metadata), 'metadata.json', ['Content-Type' => 'application/json'])
-                ->attach('media', file_get_contents($file), $file->getClientOriginalName(), ['Content-Type' => $mimeType])
-                ->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+                ->attach(
+                    'metadata',
+                    json_encode($metadata),
+                    'metadata.json',
+                    ['Content-Type' => 'application/json']
+                )
+                ->attach(
+                    'media',
+                    file_get_contents($file),
+                    $file->getClientOriginalName(),
+                    ['Content-Type' => $mimeType]
+                )
+                ->post(
+                    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart'
+                );
 
             if ($uploadResponse->successful()) {
                 $fileId = $uploadResponse->json()['id'];
 
-                Http::withToken($accessToken)->patch("https://www.googleapis.com/drive/v3/files/{$fileId}", [
-                    'name' => $fileId,
-                ]);
+                // Rename file to its Google Drive ID
+                Http::withToken($accessToken)
+                    ->patch(
+                        "https://www.googleapis.com/drive/v3/files/{$fileId}",
+                        [
+                            'name' => $fileId,
+                        ]
+                    );
 
-                Http::withToken($accessToken)->post("https://www.googleapis.com/drive/v3/files/{$fileId}/permissions", [
-                    'role' => 'reader',
-                    'type' => 'anyone',
-                ]);
+                // Make the image publicly readable
+                Http::withToken($accessToken)
+                    ->post(
+                        "https://www.googleapis.com/drive/v3/files/{$fileId}/permissions",
+                        [
+                            'role' => 'reader',
+                            'type' => 'anyone',
+                        ]
+                    );
 
                 $data['icon'] = $fileId;
             }
@@ -133,22 +161,37 @@ class AppController extends Controller
 
         $system = LinkSystem::findOrFail($request->id);
 
-        $request->validate([
-            'label' => ['required'],
-            'icon' => ['nullable', 'image', 'mimes:jpg,jpeg,png'],
-            'href' => ['required'],
-            'is_active' => ['required'],
+        $data = $request->validate([
+            'label' => ['required', 'string'],
+            'icon' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp'],
+            'href' => ['required', 'url'],
+            'is_active' => ['required', 'boolean'],
+            'is_open' => ['required', 'boolean'],
         ]);
+
+        /*
+         * ----------------------------------------
+         * Replace Icon
+         * ----------------------------------------
+         */
 
         if ($request->hasFile('icon')) {
 
+            // Delete old Google Drive icon
             if ($system->icon) {
-                Http::withToken($accessToken)->delete("https://www.googleapis.com/drive/v3/files/{$system->icon}");
+                Http::withToken($accessToken)
+                    ->delete(
+                        "https://www.googleapis.com/drive/v3/files/{$system->icon}"
+                    );
             }
 
             $folderId = config('services.google.link_system_folder_id');
 
-            $parentFolderId = $this->getOrCreateFolder($accessToken, 'icons', $folderId);
+            $parentFolderId = $this->getOrCreateFolder(
+                $accessToken,
+                'icons',
+                $folderId
+            );
 
             $file = $request->file('icon');
             $mimeType = $file->getMimeType();
@@ -159,33 +202,55 @@ class AppController extends Controller
             ];
 
             $uploadResponse = Http::withToken($accessToken)
-                ->attach('metadata', json_encode($metadata), 'metadata.json', ['Content-Type' => 'application/json'])
-                ->attach('media', file_get_contents($file), $file->getClientOriginalName(), ['Content-Type' => $mimeType])
-                ->post('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart');
+                ->attach(
+                    'metadata',
+                    json_encode($metadata),
+                    'metadata.json',
+                    ['Content-Type' => 'application/json']
+                )
+                ->attach(
+                    'media',
+                    file_get_contents($file),
+                    $file->getClientOriginalName(),
+                    ['Content-Type' => $mimeType]
+                )
+                ->post(
+                    'https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart'
+                );
 
             if ($uploadResponse->successful()) {
                 $fileId = $uploadResponse->json()['id'];
 
-                Http::withToken($accessToken)->patch("https://www.googleapis.com/drive/v3/files/{$fileId}", [
-                    'name' => $fileId,
-                ]);
+                // Rename file to Google Drive ID
+                Http::withToken($accessToken)
+                    ->patch(
+                        "https://www.googleapis.com/drive/v3/files/{$fileId}",
+                        [
+                            'name' => $fileId,
+                        ]
+                    );
 
-                Http::withToken($accessToken)->post("https://www.googleapis.com/drive/v3/files/{$fileId}/permissions", [
-                    'role' => 'reader',
-                    'type' => 'anyone',
-                ]);
+                // Make image publicly readable
+                Http::withToken($accessToken)
+                    ->post(
+                        "https://www.googleapis.com/drive/v3/files/{$fileId}/permissions",
+                        [
+                            'role' => 'reader',
+                            'type' => 'anyone',
+                        ]
+                    );
 
-                $system->update([
-                    'icon' => $fileId
-                ]);
+                $data['icon'] = $fileId;
             }
         }
 
-        $system->update([
-            'label' => $request->label,
-            'href' => $request->href,
-            'is_active' => $request->is_active,
-        ]);
+        /*
+         * ----------------------------------------
+         * Update System
+         * ----------------------------------------
+         */
+
+        $system->update($data);
     }
 
     /**
