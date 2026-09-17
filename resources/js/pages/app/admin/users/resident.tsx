@@ -49,12 +49,6 @@ export default function Resident() {
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
 
-    /*
-     * ----------------------------------------
-     * Search
-     * ----------------------------------------
-     */
-
     const debouncedSearchFn = useMemo(
         () =>
             debounce((value: string) => {
@@ -75,12 +69,6 @@ export default function Resident() {
         debouncedSearchFn(value);
     };
 
-    /*
-     * ----------------------------------------
-     * Fetch Residents
-     * ----------------------------------------
-     */
-
     const fetchResidents = async ({
         queryKey,
     }: {
@@ -88,7 +76,7 @@ export default function Resident() {
     }): Promise<ResidentResponse> => {
         const [, currentPage, currentSearch] = queryKey;
 
-        const response = await axios.get("/api/users/residents", {
+        const response = await axios.get("/admin/api/users/residents", {
             params: {
                 page: currentPage,
                 search: currentSearch,
@@ -101,46 +89,24 @@ export default function Resident() {
     const { data, isLoading, isFetching, isError } = useQuery({
         queryKey: ["residents", page, debouncedSearch],
         queryFn: fetchResidents,
-
-        // Keep the previous page visible while loading
-        // the next page.
         placeholderData: (previousData) => previousData,
-
         staleTime: 30_000,
     });
 
-    /*
-     * ----------------------------------------
-     * Columns
-     * ----------------------------------------
-     */
-
     const columns = useMemo<ColumnDef<Resident>[]>(
         () => [
-            /*
-             * ID Number
-             */
             {
                 accessorKey: "id_number",
                 header: "ID Number",
-
                 cell: ({ row }) => (
                     <span className="font-mono text-xs font-medium">
                         {row.original.id_number}
                     </span>
                 ),
             },
-
-            /*
-             * Resident
-             *
-             * Combine first + middle + last name
-             * into a cleaner presentation.
-             */
             {
                 id: "resident",
                 header: "Resident",
-
                 cell: ({ row }) => {
                     const resident = row.original;
 
@@ -173,14 +139,9 @@ export default function Resident() {
                     );
                 },
             },
-
-            /*
-             * Verification Status
-             */
             {
                 accessorKey: "is_verified",
                 header: "Verification",
-
                 cell: ({ row }) => {
                     const status = row.original.is_verified;
 
@@ -188,18 +149,7 @@ export default function Resident() {
                         return (
                             <Badge
                                 variant="outline"
-                                className="
-                                    gap-1.5
-                                    rounded-full
-                                    border-emerald-200
-                                    bg-emerald-50
-                                    px-2.5
-                                    py-1
-                                    text-emerald-700
-                                    dark:border-emerald-900
-                                    dark:bg-emerald-950/40
-                                    dark:text-emerald-400
-                                "
+                                className="gap-1.5 rounded-full border-emerald-200 bg-emerald-50 px-2.5 py-1 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400"
                             >
                                 <CheckCircle2 className="size-3.5" />
                                 Fully Verified
@@ -211,18 +161,7 @@ export default function Resident() {
                         return (
                             <Badge
                                 variant="outline"
-                                className="
-                                    gap-1.5
-                                    rounded-full
-                                    border-orange-200
-                                    bg-orange-50
-                                    px-2.5
-                                    py-1
-                                    text-orange-700
-                                    dark:border-orange-900
-                                    dark:bg-orange-950/40
-                                    dark:text-orange-400
-                                "
+                                className="gap-1.5 rounded-full border-orange-200 bg-orange-50 px-2.5 py-1 text-orange-700 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400"
                             >
                                 <ShieldCheck className="size-3.5" />
                                 Semi Verified
@@ -233,18 +172,7 @@ export default function Resident() {
                     return (
                         <Badge
                             variant="outline"
-                            className="
-                                gap-1.5
-                                rounded-full
-                                border-red-200
-                                bg-red-50
-                                px-2.5
-                                py-1
-                                text-red-700
-                                dark:border-red-900
-                                dark:bg-red-950/40
-                                dark:text-red-400
-                            "
+                            className="gap-1.5 rounded-full border-red-200 bg-red-50 px-2.5 py-1 text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-400"
                         >
                             <UserRoundX className="size-3.5" />
                             Not Verified
@@ -252,32 +180,16 @@ export default function Resident() {
                     );
                 },
             },
-
-            /*
-             * Residential Status
-             */
             {
                 accessorKey: "is_resident",
                 header: "Residency",
-
                 cell: ({ row }) => {
                     const isResident = row.original.is_resident === 1;
 
                     return isResident ? (
                         <Badge
                             variant="outline"
-                            className="
-                                gap-1.5
-                                rounded-full
-                                border-blue-200
-                                bg-blue-50
-                                px-2.5
-                                py-1
-                                text-blue-700
-                                dark:border-blue-900
-                                dark:bg-blue-950/40
-                                dark:text-blue-400
-                            "
+                            className="gap-1.5 rounded-full border-blue-200 bg-blue-50 px-2.5 py-1 text-blue-700 dark:border-blue-900 dark:bg-blue-950/40 dark:text-blue-400"
                         >
                             <UserRoundCheck className="size-3.5" />
                             Resident
@@ -285,15 +197,7 @@ export default function Resident() {
                     ) : (
                         <Badge
                             variant="outline"
-                            className="
-                                gap-1.5
-                                rounded-full
-                                border-muted-foreground/20
-                                bg-muted
-                                px-2.5
-                                py-1
-                                text-muted-foreground
-                            "
+                            className="gap-1.5 rounded-full border-muted-foreground/20 bg-muted px-2.5 py-1 text-muted-foreground"
                         >
                             <UserRoundX className="size-3.5" />
                             Not Resident
@@ -301,14 +205,9 @@ export default function Resident() {
                     );
                 },
             },
-
-            /*
-             * Actions
-             */
             {
                 id: "actions",
                 header: "",
-
                 cell: ({ row }) => {
                     const resident = row.original;
 
@@ -319,13 +218,9 @@ export default function Resident() {
                                     <Button
                                         variant="ghost"
                                         size="icon"
-                                        className="
-                                            size-8
-                                            rounded-lg
-                                        "
+                                        className="size-8 rounded-lg"
                                     >
                                         <MoreHorizontal className="size-4" />
-
                                         <span className="sr-only">
                                             Open actions
                                         </span>
@@ -344,12 +239,12 @@ export default function Resident() {
 
                                     <DropdownMenuItem
                                         className="gap-2"
-                                        onClick={() => {
+                                        onClick={() =>
                                             console.log(
                                                 "View resident:",
                                                 resident.id,
-                                            );
-                                        }}
+                                            )
+                                        }
                                     >
                                         <Eye className="size-4" />
                                         View Details
@@ -363,12 +258,6 @@ export default function Resident() {
         ],
         [],
     );
-
-    /*
-     * ----------------------------------------
-     * Error
-     * ----------------------------------------
-     */
 
     if (isError) {
         return (
@@ -402,7 +291,6 @@ export default function Resident() {
 
     return (
         <div className="space-y-5">
-            {/* Page Header */}
             <div className="flex flex-col gap-1">
                 <h1 className="text-xl font-semibold tracking-tight">
                     Residents
@@ -413,7 +301,6 @@ export default function Resident() {
                 </p>
             </div>
 
-            {/* Statistics */}
             <div className="grid gap-3 sm:grid-cols-3">
                 <Card className="border-border/60 shadow-sm">
                     <div className="flex items-center gap-3 p-4">
@@ -466,7 +353,6 @@ export default function Resident() {
                 </Card>
             </div>
 
-            {/* Residents Table */}
             <Card className="overflow-hidden border-border/60 shadow-sm">
                 <div className="p-4 sm:p-6">
                     <DataTable

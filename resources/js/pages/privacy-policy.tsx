@@ -1,4 +1,3 @@
-import React from "react";
 import {
     ShieldCheck,
     Lock,
@@ -23,6 +22,7 @@ const sections = [
                 </p>
 
                 <h3>Personal Information</h3>
+
                 <ul>
                     <li>Full name</li>
                     <li>Resident ID or identification number</li>
@@ -34,6 +34,7 @@ const sections = [
                 </ul>
 
                 <h3>Account Information</h3>
+
                 <ul>
                     <li>Username</li>
                     <li>Login credentials</li>
@@ -51,6 +52,7 @@ const sections = [
         content: (
             <>
                 <p>We use collected information to:</p>
+
                 <ul>
                     <li>Create and manage user accounts</li>
                     <li>Verify user identity and residency</li>
@@ -320,7 +322,6 @@ const sections = [
 export default function PrivacyPolicy() {
     return (
         <div className="min-h-screen bg-[#fafafa] text-gray-900">
-            {/* Hero */}
             <section className="border-b border-gray-200 bg-white">
                 <div className="mx-auto max-w-5xl px-6 py-16 text-center sm:py-20">
                     <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-[#d91656]/10 text-[#d91656]">
@@ -342,9 +343,7 @@ export default function PrivacyPolicy() {
                 </div>
             </section>
 
-            {/* Main Content */}
             <main className="mx-auto grid max-w-7xl gap-10 px-6 py-12 lg:grid-cols-[240px_1fr]">
-                {/* Sidebar */}
                 <aside className="hidden lg:block">
                     <div className="sticky top-24">
                         <p className="mb-4 text-xs font-semibold uppercase tracking-wider text-gray-400">
@@ -359,6 +358,7 @@ export default function PrivacyPolicy() {
                                     className="group flex items-center justify-between rounded-lg px-3 py-2 text-sm text-gray-600 transition hover:bg-gray-100 hover:text-[#d91656]"
                                 >
                                     <span>{section.title}</span>
+
                                     <ChevronRight
                                         size={14}
                                         className="opacity-0 transition group-hover:opacity-100"
@@ -369,9 +369,7 @@ export default function PrivacyPolicy() {
                     </div>
                 </aside>
 
-                {/* Policy */}
                 <article className="max-w-4xl">
-                    {/* Introduction */}
                     <section className="mb-12">
                         <p className="text-lg leading-8 text-gray-600">
                             Kabaya (“we,” “our,” or “the App”) respects your
@@ -388,7 +386,6 @@ export default function PrivacyPolicy() {
                         </p>
                     </section>
 
-                    {/* Sections */}
                     <div className="space-y-12">
                         {sections.map((section, index) => {
                             const Icon = section.icon;
@@ -425,7 +422,6 @@ export default function PrivacyPolicy() {
                             );
                         })}
 
-                        {/* Contact */}
                         <section
                             id="contact"
                             className="scroll-mt-24 rounded-2xl bg-gray-900 p-7 text-white sm:p-9"
@@ -465,7 +461,6 @@ export default function PrivacyPolicy() {
                 </article>
             </main>
 
-            {/* Footer */}
             <footer className="border-t border-gray-200 bg-white">
                 <div className="mx-auto flex max-w-7xl flex-col gap-3 px-6 py-8 text-sm text-gray-500 sm:flex-row sm:items-center sm:justify-between">
                     <div>
@@ -477,31 +472,30 @@ export default function PrivacyPolicy() {
                 </div>
             </footer>
 
-            {/* Typography */}
             <style>{`
-        .policy-content p {
-          margin-bottom: 18px;
-        }
+                .policy-content p {
+                    margin-bottom: 18px;
+                }
 
-        .policy-content h3 {
-          margin-top: 28px;
-          margin-bottom: 12px;
-          font-size: 16px;
-          font-weight: 700;
-          color: #171717;
-        }
+                .policy-content h3 {
+                    margin-top: 28px;
+                    margin-bottom: 12px;
+                    font-size: 16px;
+                    font-weight: 700;
+                    color: #171717;
+                }
 
-        .policy-content ul {
-          margin: 14px 0 20px;
-          padding-left: 22px;
-          list-style-type: disc;
-        }
+                .policy-content ul {
+                    margin: 14px 0 20px;
+                    padding-left: 22px;
+                    list-style-type: disc;
+                }
 
-        .policy-content li {
-          margin-bottom: 7px;
-          padding-left: 4px;
-        }
-      `}</style>
+                .policy-content li {
+                    margin-bottom: 7px;
+                    padding-left: 4px;
+                }
+            `}</style>
         </div>
     );
 }

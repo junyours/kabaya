@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-
 import {
     CheckCircle2,
     Eye,
@@ -17,24 +15,15 @@ import {
     LockKeyhole,
     ShieldCheck,
 } from "lucide-react";
-
 import { ReactNode, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
-/*
-|--------------------------------------------------------------------------
-| Validation
-|--------------------------------------------------------------------------
-*/
-
 const changePasswordSchema = z
     .object({
         current_password: z.string().min(1, "Current password is required."),
-
         password: z.string().min(8, "Password must be at least 8 characters."),
-
         password_confirmation: z
             .string()
             .min(1, "Please confirm your new password."),
@@ -46,31 +35,11 @@ const changePasswordSchema = z
 
 type ChangePasswordForm = z.infer<typeof changePasswordSchema>;
 
-/*
-|--------------------------------------------------------------------------
-| Component
-|--------------------------------------------------------------------------
-*/
-
 export default function ChangePassword() {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Visibility
-    |--------------------------------------------------------------------------
-    */
-
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-
     const [showPassword, setShowPassword] = useState(false);
-
     const [showPasswordConfirmation, setShowPasswordConfirmation] =
         useState(false);
-
-    /*
-    |--------------------------------------------------------------------------
-    | Form
-    |--------------------------------------------------------------------------
-    */
 
     const {
         register,
@@ -80,7 +49,6 @@ export default function ChangePassword() {
         formState: { errors, isSubmitting },
     } = useForm<ChangePasswordForm>({
         resolver: zodResolver(changePasswordSchema),
-
         defaultValues: {
             current_password: "",
             password: "",
@@ -88,18 +56,11 @@ export default function ChangePassword() {
         },
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Submit
-    |--------------------------------------------------------------------------
-    */
-
     const onSubmit = async (formData: ChangePasswordForm) => {
         try {
             await axios.post("/settings/change-password", formData);
 
             reset();
-
             toast.success("Password changed successfully.");
         } catch (error: any) {
             const serverErrors = error?.response?.data?.errors;
@@ -125,8 +86,6 @@ export default function ChangePassword() {
     return (
         <div className="mx-auto w-full max-w-2xl">
             <div className="space-y-6">
-                {/* Header */}
-
                 <div>
                     <div className="flex items-center gap-3">
                         <div className="flex size-11 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -146,11 +105,7 @@ export default function ChangePassword() {
                     </div>
                 </div>
 
-                {/* Form Card */}
-
                 <Card className="overflow-hidden border-border/60 shadow-sm">
-                    {/* Card Header */}
-
                     <div className="border-b px-5 py-5 sm:px-6">
                         <div className="flex items-start gap-3">
                             <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
@@ -170,14 +125,10 @@ export default function ChangePassword() {
                         </div>
                     </div>
 
-                    {/* Form */}
-
                     <form
                         onSubmit={handleSubmit(onSubmit)}
                         className="space-y-6 px-5 py-6 sm:px-6"
                     >
-                        {/* Current Password */}
-
                         <div className="space-y-2">
                             <Label htmlFor="current_password">
                                 Current Password
@@ -221,11 +172,7 @@ export default function ChangePassword() {
                             />
                         </div>
 
-                        {/* Divider */}
-
                         <div className="border-t" />
-
-                        {/* New Password */}
 
                         <div className="space-y-2">
                             <Label htmlFor="password">New Password</Label>
@@ -259,8 +206,6 @@ export default function ChangePassword() {
 
                             <InputError message={errors.password?.message} />
                         </div>
-
-                        {/* Confirm Password */}
 
                         <div className="space-y-2">
                             <Label htmlFor="password_confirmation">
@@ -305,8 +250,6 @@ export default function ChangePassword() {
                             />
                         </div>
 
-                        {/* Password Requirements */}
-
                         <div className="rounded-xl border bg-muted/30 p-4">
                             <div className="flex gap-3">
                                 <div className="flex size-9 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
@@ -337,8 +280,6 @@ export default function ChangePassword() {
                                 </div>
                             </div>
                         </div>
-
-                        {/* Actions */}
 
                         <div className="flex flex-col-reverse gap-2 border-t pt-5 sm:flex-row sm:justify-end">
                             <Button

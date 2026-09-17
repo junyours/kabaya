@@ -40,6 +40,16 @@ const navSuperAdmin: NavGroup[] = [
         ],
     },
     {
+        name: "Services",
+        items: [
+            {
+                title: "Link Systems",
+                url: "/super-admin/services/link-systems",
+                icon: LinkIcon,
+            },
+        ],
+    },
+    {
         name: "Users",
         items: [
             {
@@ -67,7 +77,7 @@ const navAdmin: NavGroup[] = [
         items: [
             {
                 title: "Dashboard",
-                url: "/dashboard",
+                url: "/admin/dashboard",
                 icon: LayoutDashboard,
             },
         ],
@@ -77,18 +87,8 @@ const navAdmin: NavGroup[] = [
         items: [
             {
                 title: "Residents",
-                url: "/users/residents",
+                url: "/admin/users/residents",
                 icon: Users,
-            },
-        ],
-    },
-    {
-        name: "Services",
-        items: [
-            {
-                title: "Link Systems",
-                url: "/services/link-systems",
-                icon: LinkIcon,
             },
         ],
     },
@@ -97,7 +97,7 @@ const navAdmin: NavGroup[] = [
         items: [
             {
                 title: "User Verifications",
-                url: "/requests/user-verifications",
+                url: "/admin/requests/user-verifications",
                 icon: UserCheck,
             },
         ],

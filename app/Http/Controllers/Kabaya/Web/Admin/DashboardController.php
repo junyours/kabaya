@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Kabaya\Web\SuperAdmin;
+namespace App\Http\Controllers\Kabaya\Web\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\LinkSystem;
@@ -127,7 +127,7 @@ class DashboardController extends Controller
                 'is_open' => (bool) $system->is_open,
             ]);
 
-        return Inertia::render('app/super-admin/dashboard', [
+        return Inertia::render('app/admin/dashboard', [
             'dashboard' => [
                 'statistics' => [
                     'total_residents' => $totalResidents,

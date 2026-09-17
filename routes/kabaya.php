@@ -13,8 +13,8 @@ use App\Http\Controllers\Kabaya\Mobile\GlobalController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::middleware(['auth:sanctum'])->group(function () {
-  Route::get('/kabaya/mobile/user', function (Request $request) {
+Route::middleware(['auth:sanctum'])->prefix('kabaya/mobile')->group(function () {
+  Route::get('/user', function (Request $request) {
     $user = $request->user();
     $deviceId = $request->device_id;
 
@@ -28,40 +28,40 @@ Route::middleware(['auth:sanctum'])->group(function () {
     return $user;
   });
 
-  Route::post('/kabaya/mobile/login', [LoginController::class, 'login']);
-  Route::post('/kabaya/mobile/lock', [LoginController::class, 'lock']);
-  Route::post('/kabaya/mobile/biometric', [LoginController::class, 'biometric']);
-  Route::post('/kabaya/mobile/login/biometric', [LoginController::class, 'loginBiometric']);
-  Route::get('/kabaya/mobile/logout', [LoginController::class, 'logout']);
-  Route::post('/kabaya/mobile/check/pin', [LoginController::class, 'checkPin']);
+  Route::post('/login', [LoginController::class, 'login']);
+  Route::post('/lock', [LoginController::class, 'lock']);
+  Route::post('/biometric', [LoginController::class, 'biometric']);
+  Route::post('/login/biometric', [LoginController::class, 'loginBiometric']);
+  Route::get('/logout', [LoginController::class, 'logout']);
+  Route::post('/check/pin', [LoginController::class, 'checkPin']);
 
-  Route::post('/kabaya/mobile/forgot-pin', [ForgotController::class, 'forgotPin']);
-  Route::post('/kabaya/mobile/forgot/verify-otp', [ForgotController::class, 'verifyOtp']);
-  Route::post('/kabaya/mobile/forgot/reset-pin', [ForgotController::class, 'resetPin']);
+  Route::post('/forgot-pin', [ForgotController::class, 'forgotPin']);
+  Route::post('/forgot/verify-otp', [ForgotController::class, 'verifyOtp']);
+  Route::post('/forgot/reset-pin', [ForgotController::class, 'resetPin']);
 
-  Route::post('/kabaya/mobile/verification/personal', [VerificationController::class, 'verificationPersonal']);
-  Route::post('/kabaya/mobile/verification/address', [VerificationController::class, 'verificationAddress']);
-  Route::post('/kabaya/mobile/verification/identity', [VerificationController::class, 'identityVerification']);
+  Route::post('/verification/personal', [VerificationController::class, 'verificationPersonal']);
+  Route::post('/verification/address', [VerificationController::class, 'verificationAddress']);
+  Route::post('/verification/identity', [VerificationController::class, 'identityVerification']);
 
-  Route::get('/kabaya/mobile/services/sb/get-folder', [SBController::class, 'getFolder']);
-  Route::get('/kabaya/mobile/services/sb/get-pdf/{id}', [SBController::class, 'getPdf']);
-  Route::get('/kabaya/mobile/services/sb/preview-pdf/{id}', [SBController::class, 'previewPdf']);
+  Route::get('/services/sb/get-folder', [SBController::class, 'getFolder']);
+  Route::get('/services/sb/get-pdf/{id}', [SBController::class, 'getPdf']);
+  Route::get('/services/sb/preview-pdf/{id}', [SBController::class, 'previewPdf']);
 
-  Route::get('/kabaya/mobile/link-systems', [LinkSystemController::class, 'getLinkSystem']);
+  Route::get('/link-systems', [LinkSystemController::class, 'getLinkSystem']);
 
-  Route::post('/kabaya/mobile/settings/change-pin', [ChangePinController::class, 'changePin']);
+  Route::post('/settings/change-pin', [ChangePinController::class, 'changePin']);
 
-  Route::get('/kabaya/mobile/demographics', [DemographicController::class, 'index']);
+  Route::get('/demographics', [DemographicController::class, 'index']);
 });
 
-Route::middleware(['guest'])->group(function () {
-  Route::get('/kabaya/mobile/get-residents', [SignUpController::class, 'getResident']);
-  Route::post('/kabaya/mobile/sign-up', [SignUpController::class, 'signUp']);
-  Route::post('/kabaya/mobile/sign-up/verify-otp', [SignUpController::class, 'verifyOtp']);
-  Route::post('/kabaya/mobile/sign-up/create-pin', [SignUpController::class, 'createPin']);
+Route::middleware(['guest'])->prefix('kabaya/mobile')->group(function () {
+  Route::get('/get-residents', [SignUpController::class, 'getResident']);
+  Route::post('/sign-up', [SignUpController::class, 'signUp']);
+  Route::post('/sign-up/verify-otp', [SignUpController::class, 'verifyOtp']);
+  Route::post('/sign-up/create-pin', [SignUpController::class, 'createPin']);
 
-  Route::post('/kabaya/mobile/sign-in', [SignInController::class, 'signIn']);
-  Route::post('/kabaya/mobile/sign-in/verify-otp', [SignInController::class, 'verifyOtp']);
+  Route::post('/sign-in', [SignInController::class, 'signIn']);
+  Route::post('/sign-in/verify-otp', [SignInController::class, 'verifyOtp']);
 });
 
-Route::post('/kabaya/mobile/resend-otp', [GlobalController::class, 'resendOtp']);
+Route::post('/resend-otp', [GlobalController::class, 'resendOtp']);

@@ -8,27 +8,14 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import AppLayout from "@/layouts/app-layout";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ColumnDef } from "@tanstack/react-table";
-import axios from "axios";
-import {
-    ExternalLink,
-    FileImage,
-    Loader2,
-    MoreHorizontal,
-    Plus,
-    SquarePen,
-} from "lucide-react";
-import { ReactNode, useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
     Sheet,
     SheetContent,
+    SheetDescription,
     SheetFooter,
     SheetHeader,
     SheetTitle,
-    SheetDescription,
 } from "@/components/ui/sheet";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -41,12 +28,25 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { toast } from "sonner";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import AppLayout from "@/layouts/app-layout";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import {
+    ExternalLink,
+    FileImage,
+    Loader2,
+    MoreHorizontal,
+    Plus,
+    SquarePen,
+} from "lucide-react";
+import { ReactNode, useEffect, useState } from "react";
+import * as z from "zod";
+import { toast } from "sonner";
 
 type System = {
     id: number;
@@ -59,17 +59,13 @@ type System = {
 
 const systemSchema = z.object({
     label: z.string().trim().min(1, "The system name is required."),
-
     icon: z.any(),
-
     href: z
         .string()
         .trim()
         .min(1, "The web link is required.")
         .url("Please enter a valid web link."),
-
     is_active: z.string().min(1, "Please select a status."),
-
     is_open: z.boolean(),
 });
 
@@ -83,15 +79,8 @@ export default function LinkSystem() {
     const [search, setSearch] = useState("");
     const [editingSystem, setEditingSystem] = useState<System | null>(null);
 
-    /*
-     * ----------------------------------------
-     * Form
-     * ----------------------------------------
-     */
-
     const systemForm = useForm<SystemForm>({
         resolver: zodResolver(systemSchema),
-
         defaultValues: {
             label: "",
             icon: "",
@@ -113,20 +102,6 @@ export default function LinkSystem() {
 
     const selectedIcon = watch("icon");
     const isOpen = watch("is_open");
-
-    /*
-     * ----------------------------------------
-     * Processing
-     * ----------------------------------------
-     */
-
-    const processing = false;
-
-    /*
-     * ----------------------------------------
-     * Sheet
-     * ----------------------------------------
-     */
 
     const handleOpenSheet = (system?: System) => {
         clearErrors();
@@ -174,12 +149,6 @@ export default function LinkSystem() {
         });
     };
 
-    /*
-     * ----------------------------------------
-     * Add
-     * ----------------------------------------
-     */
-
     const addMutation = useMutation({
         mutationFn: async (formData: SystemForm) => {
             const payload = new FormData();
@@ -194,7 +163,7 @@ export default function LinkSystem() {
             }
 
             const response = await axios.post(
-                "/api/services/add/link-systems",
+                "/super-admin/api/services/add/link-systems",
                 payload,
                 {
                     headers: {
@@ -205,7 +174,6 @@ export default function LinkSystem() {
 
             return response.data;
         },
-
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["link-systems"],
@@ -224,7 +192,6 @@ export default function LinkSystem() {
 
             toast.success("Link system added successfully.");
         },
-
         onError: (error: any) => {
             const serverErrors = error?.response?.data?.errors;
 
@@ -243,12 +210,6 @@ export default function LinkSystem() {
         },
     });
 
-    /*
-     * ----------------------------------------
-     * Update
-     * ----------------------------------------
-     */
-
     const updateMutation = useMutation({
         mutationFn: async (formData: SystemForm) => {
             const payload = new FormData();
@@ -263,7 +224,7 @@ export default function LinkSystem() {
             }
 
             const response = await axios.post(
-                `/api/services/update/link-systems/${editingSystem?.id}`,
+                `/super-admin/api/services/update/link-systems/${editingSystem?.id}`,
                 payload,
                 {
                     headers: {
@@ -274,7 +235,6 @@ export default function LinkSystem() {
 
             return response.data;
         },
-
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["link-systems"],
@@ -293,7 +253,6 @@ export default function LinkSystem() {
 
             toast.success("Link system updated successfully.");
         },
-
         onError: (error: any) => {
             const serverErrors = error?.response?.data?.errors;
 
@@ -314,25 +273,14 @@ export default function LinkSystem() {
 
     const isProcessing = addMutation.isPending || updateMutation.isPending;
 
-    /*
-     * ----------------------------------------
-     * Submit
-     * ----------------------------------------
-     */
-
     const onSubmit = (formData: SystemForm) => {
-        /*
-         * Icon is only required when creating.
-         */
-        if (!editingSystem) {
-            if (!(formData.icon instanceof File)) {
-                setError("icon", {
-                    type: "manual",
-                    message: "The system icon is required.",
-                });
+        if (!editingSystem && !(formData.icon instanceof File)) {
+            setError("icon", {
+                type: "manual",
+                message: "The system icon is required.",
+            });
 
-                return;
-            }
+            return;
         }
 
         if (editingSystem) {
@@ -342,12 +290,6 @@ export default function LinkSystem() {
         }
     };
 
-    /*
-     * ----------------------------------------
-     * Query
-     * ----------------------------------------
-     */
-
     const fetchSystems = async ({
         queryKey,
     }: {
@@ -355,12 +297,15 @@ export default function LinkSystem() {
     }) => {
         const [, currentPage, currentSearch] = queryKey;
 
-        const response = await axios.get("/api/services/link-systems", {
-            params: {
-                page: currentPage,
-                search: currentSearch,
+        const response = await axios.get(
+            "/super-admin/api/services/link-systems",
+            {
+                params: {
+                    page: currentPage,
+                    search: currentSearch,
+                },
             },
-        });
+        );
 
         return response.data;
     };
@@ -371,20 +316,10 @@ export default function LinkSystem() {
         placeholderData: (previousData) => previousData,
     });
 
-    /*
-     * ----------------------------------------
-     * Columns
-     * ----------------------------------------
-     */
-
     const columns: ColumnDef<System>[] = [
-        /*
-         * System
-         */
         {
             accessorKey: "icon",
             header: "System",
-
             cell: ({ row }) => {
                 const system = row.original;
 
@@ -415,14 +350,9 @@ export default function LinkSystem() {
                 );
             },
         },
-
-        /*
-         * Web Link
-         */
         {
             accessorKey: "href",
             header: "Web Link",
-
             cell: ({ row }) => {
                 const system = row.original;
 
@@ -433,14 +363,7 @@ export default function LinkSystem() {
                             target="_blank"
                             rel="noopener noreferrer"
                             title={system.href}
-                            className="
-                                truncate
-                                text-sm
-                                text-muted-foreground
-                                transition-colors
-                                hover:text-primary
-                                hover:underline
-                            "
+                            className="truncate text-sm text-muted-foreground transition-colors hover:text-primary hover:underline"
                         >
                             {system.href}
                         </a>
@@ -450,14 +373,9 @@ export default function LinkSystem() {
                 );
             },
         },
-
-        /*
-         * Active Status
-         */
         {
             accessorKey: "is_active",
             header: "Status",
-
             cell: ({ row }) => {
                 const system = row.original;
 
@@ -485,14 +403,9 @@ export default function LinkSystem() {
                 );
             },
         },
-
-        /*
-         * Open / Closed
-         */
         {
             accessorKey: "is_open",
             header: "Access",
-
             cell: ({ row }) => {
                 const system = row.original;
 
@@ -520,14 +433,9 @@ export default function LinkSystem() {
                 );
             },
         },
-
-        /*
-         * Actions
-         */
         {
             id: "actions",
             header: "",
-
             cell: ({ row }) => {
                 const system = row.original;
 
@@ -541,7 +449,6 @@ export default function LinkSystem() {
                                     className="size-8 rounded-lg"
                                 >
                                     <MoreHorizontal className="size-4" />
-
                                     <span className="sr-only">
                                         Open actions
                                     </span>
@@ -570,12 +477,6 @@ export default function LinkSystem() {
         },
     ];
 
-    /*
-     * ----------------------------------------
-     * Icon Preview
-     * ----------------------------------------
-     */
-
     const iconPreview =
         selectedIcon instanceof File
             ? URL.createObjectURL(selectedIcon)
@@ -583,9 +484,6 @@ export default function LinkSystem() {
               ? `https://lh3.googleusercontent.com/d/${editingSystem.icon}`
               : null;
 
-    /*
-     * Cleanup preview URL
-     */
     useEffect(() => {
         if (!(selectedIcon instanceof File)) {
             return;
@@ -598,16 +496,9 @@ export default function LinkSystem() {
         };
     }, [selectedIcon]);
 
-    /*
-     * ----------------------------------------
-     * Render
-     * ----------------------------------------
-     */
-
     return (
         <>
             <div className="space-y-5">
-                {/* Page Header */}
                 <div className="flex flex-col gap-1">
                     <h1 className="text-xl font-semibold tracking-tight">
                         Link Systems
@@ -619,7 +510,6 @@ export default function LinkSystem() {
                     </p>
                 </div>
 
-                {/* Data Table */}
                 <Card className="overflow-hidden border-border/60 shadow-sm">
                     <div className="p-4 sm:p-6">
                         <DataTable
@@ -648,10 +538,6 @@ export default function LinkSystem() {
                 </Card>
             </div>
 
-            {/* ---------------------------------------- */}
-            {/* Add / Edit Sheet */}
-            {/* ---------------------------------------- */}
-
             <Sheet
                 open={openSheet}
                 onOpenChange={(open) => {
@@ -664,7 +550,6 @@ export default function LinkSystem() {
                     side="right"
                     className="flex w-full flex-col p-0 sm:max-w-md"
                 >
-                    {/* Header */}
                     <SheetHeader className="border-b px-6 py-5">
                         <SheetTitle className="text-lg">
                             {editingSystem
@@ -679,13 +564,8 @@ export default function LinkSystem() {
                         </SheetDescription>
                     </SheetHeader>
 
-                    {/* Content */}
                     <div className="flex-1 overflow-y-auto">
                         <div className="space-y-7 px-6 py-6">
-                            {/* ---------------------------------------- */}
-                            {/* Icon */}
-                            {/* ---------------------------------------- */}
-
                             <div className="space-y-3">
                                 <div>
                                     <Label className="text-sm font-medium">
@@ -744,10 +624,6 @@ export default function LinkSystem() {
 
                             <div className="border-t" />
 
-                            {/* ---------------------------------------- */}
-                            {/* System Information */}
-                            {/* ---------------------------------------- */}
-
                             <div className="space-y-5">
                                 <div>
                                     <h3 className="text-sm font-semibold">
@@ -760,7 +636,6 @@ export default function LinkSystem() {
                                     </p>
                                 </div>
 
-                                {/* System Name */}
                                 <div className="space-y-2">
                                     <Label htmlFor="label">System Name</Label>
 
@@ -781,7 +656,6 @@ export default function LinkSystem() {
                                     />
                                 </div>
 
-                                {/* Web Link */}
                                 <div className="space-y-2">
                                     <Label htmlFor="href">Web Link</Label>
 
@@ -803,7 +677,6 @@ export default function LinkSystem() {
                                     />
                                 </div>
 
-                                {/* Status */}
                                 <div className="space-y-2">
                                     <Label>Status</Label>
 
@@ -842,7 +715,6 @@ export default function LinkSystem() {
                                     />
                                 </div>
 
-                                {/* Access Control */}
                                 <div
                                     className={cn(
                                         "rounded-xl border p-4 transition-colors",
@@ -905,7 +777,6 @@ export default function LinkSystem() {
                         </div>
                     </div>
 
-                    {/* Footer */}
                     <SheetFooter className="border-t px-6 py-4">
                         <div className="flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-end">
                             <Button
@@ -927,7 +798,6 @@ export default function LinkSystem() {
                                 {isProcessing ? (
                                     <>
                                         <Loader2 className="size-4 animate-spin" />
-
                                         {editingSystem
                                             ? "Updating..."
                                             : "Saving..."}

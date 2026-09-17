@@ -29,7 +29,6 @@ export default function Login() {
     return (
         <form onSubmit={handleLogin}>
             <CardContent className="space-y-5 px-6 pt-6 sm:px-8 sm:pt-7">
-                {/* Username */}
                 <div className="space-y-2">
                     <Label htmlFor="user_name" className="text-sm font-medium">
                         Username
@@ -57,7 +56,6 @@ export default function Login() {
                     <InputError message={errors.user_name} />
                 </div>
 
-                {/* Password */}
                 <div className="space-y-2">
                     <Label htmlFor="password" className="text-sm font-medium">
                         Password
@@ -100,7 +98,6 @@ export default function Login() {
                     <InputError message={errors.password} />
                 </div>
 
-                {/* Security message */}
                 <div className="rounded-lg border bg-muted/40 px-3.5 py-3">
                     <p className="text-xs leading-relaxed text-muted-foreground">
                         Your account credentials are protected. Never share your

@@ -1,26 +1,5 @@
 import AppLayout from "@/layouts/app-layout";
-import { usePage } from "@inertiajs/react";
-import axios from "axios";
-import { ReactNode, useState } from "react";
-
-import {
-    AlertTriangle,
-    Check,
-    Clipboard,
-    KeyRound,
-    RefreshCw,
-} from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-
-import {
-    Card,
-    CardContent,
-    CardDescription,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-
+import { PageProps } from "@/types";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -31,23 +10,33 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-
-import { PageProps } from "@/types";
+import { Button } from "@/components/ui/button";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
+import { usePage } from "@inertiajs/react";
+import axios from "axios";
+import {
+    AlertTriangle,
+    Check,
+    Clipboard,
+    KeyRound,
+    RefreshCw,
+} from "lucide-react";
+import { ReactNode, useState } from "react";
 
 export default function Key() {
     const { apiClient } = usePage<PageProps>().props;
 
     const [showGenerateDialog, setShowGenerateDialog] = useState(false);
-
     const [processing, setProcessing] = useState(false);
-
     const [copied, setCopied] = useState(false);
-
     const [generatedKey, setGeneratedKey] = useState<string | null>(null);
 
-    /**
-     * Copy API key
-     */
     const copyKey = async (key: string) => {
         if (!key) {
             return;
@@ -55,20 +44,16 @@ export default function Key() {
 
         try {
             await navigator.clipboard.writeText(key);
-
             setCopied(true);
 
             setTimeout(() => {
                 setCopied(false);
             }, 2000);
-        } catch (error) {
-            console.error("Failed to copy API key:", error);
+        } catch {
+            setCopied(false);
         }
     };
 
-    /**
-     * Generate new API key
-     */
     const generateKey = async () => {
         try {
             setProcessing(true);
@@ -76,10 +61,12 @@ export default function Key() {
             const response = await axios.post(
                 "/super-admin/clients/keys/generate",
             );
+
             setGeneratedKey(response.data.api_key);
             setShowGenerateDialog(false);
-        } catch (error) {
-            console.error("Failed to generate API key:", error);
+            setCopied(false);
+        } catch {
+            setShowGenerateDialog(false);
         } finally {
             setProcessing(false);
         }
@@ -88,26 +75,22 @@ export default function Key() {
     return (
         <>
             <div className="mx-auto w-full max-w-3xl space-y-6 p-6">
-                {/* Header */}
-                <div>
-                    <div className="flex items-center gap-3">
-                        <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
-                            <KeyRound className="size-5" />
-                        </div>
+                <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-xl bg-primary/10 text-primary">
+                        <KeyRound className="size-5" />
+                    </div>
 
-                        <div>
-                            <h1 className="text-2xl font-semibold tracking-tight">
-                                API Key
-                            </h1>
+                    <div>
+                        <h1 className="text-2xl font-semibold tracking-tight">
+                            API Key
+                        </h1>
 
-                            <p className="text-sm text-muted-foreground">
-                                Manage the API key used by external systems.
-                            </p>
-                        </div>
+                        <p className="text-sm text-muted-foreground">
+                            Manage the API key used by external systems.
+                        </p>
                     </div>
                 </div>
 
-                {/* API Access */}
                 <Card>
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
@@ -178,7 +161,6 @@ export default function Key() {
                     </CardContent>
                 </Card>
 
-                {/* Newly Generated API Key */}
                 {generatedKey && (
                     <Card className="border-primary/30">
                         <CardHeader>
@@ -231,7 +213,6 @@ export default function Key() {
                 )}
             </div>
 
-            {/* Confirmation Dialog */}
             <AlertDialog
                 open={showGenerateDialog}
                 onOpenChange={setShowGenerateDialog}
@@ -258,7 +239,6 @@ export default function Key() {
                             disabled={processing}
                             onClick={(event) => {
                                 event.preventDefault();
-
                                 generateKey();
                             }}
                         >

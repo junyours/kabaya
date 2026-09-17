@@ -30,7 +30,7 @@ class AuthController extends Controller
             return redirect('/super-admin/dashboard');
         }
 
-        return redirect("/dashboard");
+        return redirect("/admin/dashboard");
     }
 
     public function destroy(Request $request): RedirectResponse

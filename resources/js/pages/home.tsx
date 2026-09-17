@@ -18,12 +18,8 @@ const BRAND = "hsl(346.8 77.2% 49.8%)";
 export default function Home() {
     return (
         <main className="min-h-screen overflow-hidden bg-[#FCF9FA] text-slate-900">
-            {/* =====================================================
-          NAVBAR
-      ====================================================== */}
             <header className="fixed inset-x-0 top-0 z-50 border-b border-white/30 bg-white/70 backdrop-blur-xl">
                 <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-6 lg:px-8">
-                    {/* Logo */}
                     <a href="#" className="flex items-center gap-3">
                         <img
                             src={WonderfulOpol}
@@ -32,7 +28,7 @@ export default function Home() {
                         />
 
                         <div>
-                            <img src={Logo} alt="logo" className="w-24 h-7" />
+                            <img src={Logo} alt="logo" className="h-7 w-24" />
 
                             <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-500">
                                 For Opol Residents
@@ -40,7 +36,6 @@ export default function Home() {
                         </div>
                     </a>
 
-                    {/* Desktop navigation */}
                     <nav className="hidden items-center gap-8 md:flex">
                         <a
                             href="#features"
@@ -68,7 +63,6 @@ export default function Home() {
                         </a>
                     </nav>
 
-                    {/* Mobile */}
                     <a
                         href="#download"
                         className="rounded-full px-4 py-2 text-sm font-semibold text-white md:hidden"
@@ -79,11 +73,7 @@ export default function Home() {
                 </div>
             </header>
 
-            {/* =====================================================
-          HERO
-      ====================================================== */}
             <section className="relative overflow-hidden pt-32 lg:pt-40">
-                {/* Large background circle - top left */}
                 <div
                     className="absolute -left-[260px] -top-[120px] h-[620px] w-[620px] rounded-full blur-3xl"
                     style={{
@@ -91,7 +81,6 @@ export default function Home() {
                     }}
                 />
 
-                {/* Large background circle - top right */}
                 <div
                     className="absolute -right-[260px] top-[80px] h-[650px] w-[650px] rounded-full blur-3xl"
                     style={{
@@ -99,7 +88,6 @@ export default function Home() {
                     }}
                 />
 
-                {/* Small decorative circles */}
                 <div
                     className="absolute left-[8%] top-[45%] h-20 w-20 rounded-full blur-2xl"
                     style={{
@@ -115,11 +103,7 @@ export default function Home() {
                 />
 
                 <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 pb-24 lg:grid-cols-2 lg:px-8">
-                    {/* =================================================
-              HERO CONTENT
-          ================================================== */}
                     <div className="relative z-10 max-w-2xl">
-                        {/* Badge */}
                         <div
                             className="mb-6 inline-flex items-center gap-2 rounded-full border px-4 py-2 backdrop-blur"
                             style={{
@@ -143,7 +127,6 @@ export default function Home() {
                             </span>
                         </div>
 
-                        {/* Heading */}
                         <h2 className="text-5xl font-black leading-[1.05] tracking-tight text-slate-950 sm:text-6xl lg:text-7xl">
                             Your community,
                             <span className="block" style={{ color: BRAND }}>
@@ -151,14 +134,12 @@ export default function Home() {
                             </span>
                         </h2>
 
-                        {/* Description */}
                         <p className="mt-7 max-w-xl text-lg leading-8 text-slate-600">
                             Kabaya brings essential community services, local
                             information, emergency assistance, and digital
                             services closer to every Opol resident.
                         </p>
 
-                        {/* CTA */}
                         <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                             <a
                                 href="#download"
@@ -184,7 +165,6 @@ export default function Home() {
                             </a>
                         </div>
 
-                        {/* Trust points */}
                         <div className="mt-8 flex flex-wrap gap-x-6 gap-y-3 text-sm text-slate-500">
                             <div className="flex items-center gap-2">
                                 <CheckCircle2
@@ -209,11 +189,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* =================================================
-              PHONE AREA
-          ================================================== */}
                     <div className="relative flex justify-center lg:justify-end">
-                        {/* Main huge glow */}
                         <div
                             className="absolute left-1/2 top-1/2 h-[520px] w-[520px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
                             style={{
@@ -221,7 +197,6 @@ export default function Home() {
                             }}
                         />
 
-                        {/* Outer circle */}
                         <div
                             className="absolute left-1/2 top-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 rounded-full border"
                             style={{
@@ -229,7 +204,6 @@ export default function Home() {
                             }}
                         />
 
-                        {/* Inner circle */}
                         <div
                             className="absolute left-1/2 top-1/2 h-[360px] w-[360px] -translate-x-1/2 -translate-y-1/2 rounded-full"
                             style={{
@@ -237,7 +211,6 @@ export default function Home() {
                             }}
                         />
 
-                        {/* Small circles */}
                         <div
                             className="absolute left-0 top-20 h-24 w-24 rounded-full blur-2xl"
                             style={{
@@ -253,9 +226,6 @@ export default function Home() {
                         />
 
                         <div className="relative z-10">
-                            {/* =================================================
-                  FLOATING EMERGENCY CARD
-              ================================================== */}
                             <div className="absolute -left-20 top-28 z-30 hidden rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xl backdrop-blur-xl sm:block">
                                 <div className="flex items-center gap-3">
                                     <div
@@ -280,9 +250,6 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            {/* =================================================
-                  FLOATING VERIFICATION CARD
-              ================================================== */}
                             <div className="absolute -right-14 bottom-28 z-30 hidden rounded-2xl border border-white/80 bg-white/90 p-4 shadow-2xl backdrop-blur-xl sm:block">
                                 <div className="flex items-center gap-3">
                                     <div
@@ -307,15 +274,10 @@ export default function Home() {
                                 </div>
                             </div>
 
-                            {/* =================================================
-                  PHONE
-              ================================================== */}
                             <div className="relative h-[650px] w-[320px] rounded-[48px] border-[8px] border-slate-950 bg-slate-950 p-2 shadow-[0_40px_100px_rgba(15,23,42,0.25)]">
                                 <div className="relative h-full overflow-hidden rounded-[38px] bg-[#F8F5F6]">
-                                    {/* Dynamic island */}
                                     <div className="absolute left-1/2 top-3 z-30 h-7 w-28 -translate-x-1/2 rounded-full bg-black" />
 
-                                    {/* Header */}
                                     <div className="px-6 pb-4 pt-14">
                                         <div className="flex items-center justify-between">
                                             <div>
@@ -339,7 +301,6 @@ export default function Home() {
                                         </div>
                                     </div>
 
-                                    {/* Main card */}
                                     <div
                                         className="mx-5 rounded-3xl p-5 text-white shadow-xl"
                                         style={{
@@ -365,7 +326,6 @@ export default function Home() {
                                         </div>
                                     </div>
 
-                                    {/* Quick Access */}
                                     <div className="px-5 pt-6">
                                         <div className="mb-3 flex items-center justify-between">
                                             <p className="font-bold text-slate-900">
@@ -425,7 +385,6 @@ export default function Home() {
                                         </div>
                                     </div>
 
-                                    {/* News */}
                                     <div className="px-5 pt-7">
                                         <p className="mb-3 font-bold text-slate-900">
                                             Community Updates
@@ -461,7 +420,6 @@ export default function Home() {
                     </div>
                 </div>
 
-                {/* Bottom circular decoration */}
                 <div
                     className="absolute -bottom-[180px] left-1/2 h-[400px] w-[400px] -translate-x-1/2 rounded-full blur-3xl"
                     style={{
@@ -470,11 +428,7 @@ export default function Home() {
                 />
             </section>
 
-            {/* =====================================================
-          STATS
-      ====================================================== */}
             <section className="relative overflow-hidden border-y border-slate-100 bg-white">
-                {/* Background glow */}
                 <div
                     className="absolute left-1/2 top-1/2 h-64 w-64 -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
                     style={{
@@ -505,14 +459,10 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* =====================================================
-          FEATURES
-      ====================================================== */}
             <section
                 id="features"
                 className="relative overflow-hidden bg-[#FCF9FA] py-24"
             >
-                {/* Background circles */}
                 <div
                     className="absolute -left-[250px] top-[100px] h-[500px] w-[500px] rounded-full blur-3xl"
                     style={{
@@ -528,7 +478,6 @@ export default function Home() {
                 />
 
                 <div className="relative mx-auto max-w-7xl px-6 lg:px-8">
-                    {/* Heading */}
                     <div className="mx-auto max-w-2xl text-center">
                         <span
                             className="text-sm font-bold uppercase tracking-[0.2em]"
@@ -547,7 +496,6 @@ export default function Home() {
                         </p>
                     </div>
 
-                    {/* Feature cards */}
                     <div className="mt-16 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
                         {[
                             {
@@ -588,7 +536,6 @@ export default function Home() {
                                     key={feature.title}
                                     className="group relative overflow-hidden rounded-3xl border border-slate-100 bg-white/80 p-7 shadow-sm backdrop-blur transition duration-300 hover:-translate-y-1 hover:shadow-xl"
                                 >
-                                    {/* Card circle */}
                                     <div
                                         className="absolute -right-12 -top-12 h-32 w-32 rounded-full blur-2xl transition duration-500 group-hover:scale-150"
                                         style={{
@@ -628,14 +575,10 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* =====================================================
-          ABOUT
-      ====================================================== */}
             <section
                 id="about"
                 className="relative overflow-hidden bg-white py-24"
             >
-                {/* Big circles */}
                 <div
                     className="absolute -right-[200px] top-[100px] h-[500px] w-[500px] rounded-full blur-3xl"
                     style={{
@@ -651,7 +594,6 @@ export default function Home() {
                 />
 
                 <div className="relative mx-auto grid max-w-7xl items-center gap-16 px-6 lg:grid-cols-2 lg:px-8">
-                    {/* Text */}
                     <div>
                         <span
                             className="text-sm font-bold uppercase tracking-[0.2em]"
@@ -696,9 +638,7 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* About Card */}
                     <div className="relative">
-                        {/* Glow behind card */}
                         <div
                             className="absolute left-1/2 top-1/2 h-[400px] w-[400px] -translate-x-1/2 -translate-y-1/2 rounded-full blur-3xl"
                             style={{
@@ -712,7 +652,6 @@ export default function Home() {
                                 background: `linear-gradient(135deg, hsl(346.8 77.2% 36%), ${BRAND})`,
                             }}
                         >
-                            {/* Decorative circle */}
                             <div className="absolute -right-24 -top-24 h-64 w-64 rounded-full bg-white/10" />
 
                             <div className="absolute -bottom-32 -left-20 h-72 w-72 rounded-full bg-white/5" />
@@ -757,9 +696,6 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* =====================================================
-          DOWNLOAD CTA
-      ====================================================== */}
             <section
                 id="download"
                 className="relative overflow-hidden"
@@ -767,7 +703,6 @@ export default function Home() {
                     background: `linear-gradient(135deg, hsl(346.8 77.2% 43%), ${BRAND})`,
                 }}
             >
-                {/* Large circles */}
                 <div className="absolute -left-40 -top-40 h-[500px] w-[500px] rounded-full bg-white/10 blur-3xl" />
 
                 <div className="absolute -bottom-40 -right-40 h-[550px] w-[550px] rounded-full bg-black/10 blur-3xl" />
@@ -775,7 +710,6 @@ export default function Home() {
                 <div className="absolute left-1/2 top-1/2 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/10" />
 
                 <div className="relative mx-auto max-w-5xl px-6 py-24 text-center">
-                    {/* Logo */}
                     <div className="mx-auto flex items-center justify-center">
                         <img
                             src={WonderfulOpol}
@@ -793,24 +727,14 @@ export default function Home() {
                         way to connect with your community.
                     </p>
 
-                    {/* Download buttons */}
                     <div className="mt-9 flex flex-col justify-center gap-3 sm:flex-row">
                         <a
-                            href="https://drive.google.com/uc?export=download&id=10H37lbwI3QM0dQbMr5ZRAoD0ya4KTEok"
-                            target="_blank"
+                            href="#"
                             className="inline-flex items-center justify-center gap-3 rounded-2xl bg-white px-7 py-4 font-bold text-slate-900 shadow-xl transition hover:-translate-y-1 hover:shadow-2xl"
                         >
                             <Smartphone size={21} />
                             Download for Android
                         </a>
-
-                        {/* <a
-                            href="#"
-                            className="inline-flex items-center justify-center gap-3 rounded-2xl border border-white/30 bg-white/10 px-7 py-4 font-bold text-white backdrop-blur transition hover:bg-white/20"
-                        >
-                            <Smartphone size={21} />
-                            Download for iOS
-                        </a> */}
                     </div>
 
                     <p className="mt-6 text-xs text-white/60">
@@ -819,11 +743,7 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* =====================================================
-          FOOTER
-      ====================================================== */}
             <footer className="relative overflow-hidden bg-slate-950 text-white">
-                {/* Footer glow */}
                 <div
                     className="absolute -right-32 -top-32 h-64 w-64 rounded-full blur-3xl"
                     style={{
@@ -832,7 +752,6 @@ export default function Home() {
                 />
 
                 <div className="relative mx-auto flex max-w-7xl flex-col gap-8 px-6 py-10 md:flex-row md:items-center md:justify-between lg:px-8">
-                    {/* Logo */}
                     <div className="flex items-center gap-3">
                         <img
                             src={WonderfulOpol}
@@ -841,7 +760,7 @@ export default function Home() {
                         />
 
                         <div>
-                            <img src={Logo} alt="logo" className="w-24 h-7" />
+                            <img src={Logo} alt="logo" className="h-7 w-24" />
 
                             <p className="text-xs text-slate-500">
                                 For Opol Residents
@@ -849,7 +768,6 @@ export default function Home() {
                         </div>
                     </div>
 
-                    {/* Links */}
                     <div className="flex flex-wrap gap-6 text-sm text-slate-400">
                         <a
                             href="#features"
@@ -873,7 +791,6 @@ export default function Home() {
                         </a>
                     </div>
 
-                    {/* Copyright */}
                     <p className="text-sm text-slate-500">
                         © {new Date().getFullYear()} Kabaya. All rights
                         reserved.

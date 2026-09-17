@@ -28,15 +28,6 @@ import {
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Textarea } from "@/components/ui/textarea";
-
-import AppLayout from "@/layouts/app-layout";
-
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-
-import { ColumnDef } from "@tanstack/react-table";
-
-import axios from "axios";
-
 import {
     Select,
     SelectContent,
@@ -44,7 +35,10 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
-
+import AppLayout from "@/layouts/app-layout";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { ColumnDef } from "@tanstack/react-table";
+import axios from "axios";
 import {
     AlertCircle,
     Check,
@@ -55,77 +49,51 @@ import {
     MoreHorizontal,
     ShieldCheck,
     UserRound,
-    UserRoundCheck,
-    UserRoundX,
     X,
 } from "lucide-react";
-
 import { ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-
 import debounce from "lodash/debounce";
-
-/*
-|--------------------------------------------------------------------------
-| Types
-|--------------------------------------------------------------------------
-*/
 
 interface UserVerification {
     id: number;
-
     id_type: string;
     id_number: string;
-
     first_name: string;
     middle_name: string | null;
     last_name: string;
-
     date_of_birth: string;
     address: string | null;
-
     id_front_image: string | null;
     id_back_image: string | null;
     face_image: string | null;
-
     status: "pending" | "approved" | "rejected";
-
     remarks: string | null;
-
     verified_at: string | null;
     rejected_at: string | null;
 }
 
 interface User {
     id: number;
-
     id_number: string;
-
     first_name: string;
     middle_name: string | null;
     last_name: string;
     suffix: string | null;
-
     sex: string | null;
     marital_status: string | null;
     birth_date: string | null;
     religion: string | null;
-
     profile_picture: string | null;
-
     mobile_number: string | null;
     mobile_verified_at: string | null;
-
     email: string | null;
     email_verified_at: string | null;
-
     province: string | null;
     municipality: string | null;
     barangay: string | null;
     street_name: string | null;
     postal_code: string | null;
-
     is_verified: number | null;
-
     latest_verification: UserVerification | null;
 }
 
@@ -136,12 +104,6 @@ interface PaginatedResponse {
     total: number;
 }
 
-/*
-|--------------------------------------------------------------------------
-| Google Drive image
-|--------------------------------------------------------------------------
-*/
-
 const googleDriveImage = (fileId: string | null | undefined) => {
     if (!fileId) {
         return null;
@@ -150,23 +112,11 @@ const googleDriveImage = (fileId: string | null | undefined) => {
     return `https://lh3.googleusercontent.com/d/${fileId}`;
 };
 
-/*
-|--------------------------------------------------------------------------
-| Full name
-|--------------------------------------------------------------------------
-*/
-
 function getFullName(user: User) {
     return [user.first_name, user.middle_name, user.last_name, user.suffix]
         .filter(Boolean)
         .join(" ");
 }
-
-/*
-|--------------------------------------------------------------------------
-| Verification Status Badge
-|--------------------------------------------------------------------------
-*/
 
 function StatusBadge({
     status,
@@ -177,15 +127,7 @@ function StatusBadge({
         return (
             <Badge
                 variant="outline"
-                className="
-                    gap-1.5
-                    rounded-full
-                    border-muted-foreground/20
-                    bg-muted
-                    px-2.5
-                    py-1
-                    text-muted-foreground
-                "
+                className="gap-1.5 rounded-full border-muted-foreground/20 bg-muted px-2.5 py-1 text-muted-foreground"
             >
                 <span className="size-1.5 rounded-full bg-muted-foreground" />
                 No Request
@@ -200,14 +142,12 @@ function StatusBadge({
                 "border-orange-200 bg-orange-50 text-orange-700 dark:border-orange-900 dark:bg-orange-950/40 dark:text-orange-400",
             dot: "bg-orange-500",
         },
-
         approved: {
             label: "Approved",
             className:
                 "border-emerald-200 bg-emerald-50 text-emerald-700 dark:border-emerald-900 dark:bg-emerald-950/40 dark:text-emerald-400",
             dot: "bg-emerald-500",
         },
-
         rejected: {
             label: "Rejected",
             className:
@@ -219,38 +159,19 @@ function StatusBadge({
     return (
         <Badge
             variant="outline"
-            className={`
-                gap-1.5
-                rounded-full
-                px-2.5
-                py-1
-                text-xs
-                font-medium
-                ${config.className}
-            `}
+            className={`gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${config.className}`}
         >
             <span className={`size-1.5 rounded-full ${config.dot}`} />
-
             {config.label}
         </Badge>
     );
 }
 
-/*
-|--------------------------------------------------------------------------
-| Columns
-|--------------------------------------------------------------------------
-*/
-
 function createColumns(onView: (user: User) => void): ColumnDef<User>[] {
     return [
-        /*
-         * Resident
-         */
         {
             id: "resident",
             header: "Resident",
-
             cell: ({ row }) => {
                 const user = row.original;
 
@@ -285,14 +206,9 @@ function createColumns(onView: (user: User) => void): ColumnDef<User>[] {
                 );
             },
         },
-
-        /*
-         * ID Type
-         */
         {
             id: "id_type",
             header: "ID Type",
-
             cell: ({ row }) => {
                 const verification = row.original.latest_verification;
 
@@ -317,28 +233,18 @@ function createColumns(onView: (user: User) => void): ColumnDef<User>[] {
                 );
             },
         },
-
-        /*
-         * Status
-         */
         {
             id: "status",
             header: "Status",
-
             cell: ({ row }) => (
                 <StatusBadge
                     status={row.original.latest_verification?.status}
                 />
             ),
         },
-
-        /*
-         * Submitted
-         */
         {
             id: "submitted",
             header: "Submitted",
-
             cell: ({ row }) => {
                 const verification = row.original.latest_verification;
 
@@ -371,14 +277,9 @@ function createColumns(onView: (user: User) => void): ColumnDef<User>[] {
                 );
             },
         },
-
-        /*
-         * Actions
-         */
         {
             id: "actions",
             header: "",
-
             cell: ({ row }) => {
                 const user = row.original;
 
@@ -392,7 +293,6 @@ function createColumns(onView: (user: User) => void): ColumnDef<User>[] {
                                     className="size-8 rounded-lg"
                                 >
                                     <MoreHorizontal className="size-4" />
-
                                     <span className="sr-only">
                                         Open actions
                                     </span>
@@ -422,36 +322,17 @@ function createColumns(onView: (user: User) => void): ColumnDef<User>[] {
     ];
 }
 
-/*
-|--------------------------------------------------------------------------
-| Main
-|--------------------------------------------------------------------------
-*/
-
 export default function UserVerification() {
     const queryClient = useQueryClient();
 
     const [page, setPage] = useState(1);
-
     const [search, setSearch] = useState("");
-
     const [debouncedSearch, setDebouncedSearch] = useState("");
-
     const [selectedUser, setSelectedUser] = useState<User | null>(null);
-
     const [sheetOpen, setSheetOpen] = useState(false);
-
     const [rejectOpen, setRejectOpen] = useState(false);
-
     const [remarks, setRemarks] = useState("");
-
     const [residentStatus, setResidentStatus] = useState<"yes" | "no" | "">("");
-
-    /*
-     * ----------------------------------------
-     * Search
-     * ----------------------------------------
-     */
 
     const debouncedSearchFn = useMemo(
         () =>
@@ -473,12 +354,6 @@ export default function UserVerification() {
         debouncedSearchFn(value);
     };
 
-    /*
-     * ----------------------------------------
-     * Fetch
-     * ----------------------------------------
-     */
-
     const fetchUserVerification = async ({
         queryKey,
     }: {
@@ -486,36 +361,30 @@ export default function UserVerification() {
     }): Promise<PaginatedResponse> => {
         const [, currentPage, currentSearch] = queryKey;
 
-        const { data } = await axios.get("/api/requests/user-verifications", {
-            params: {
-                page: currentPage,
-                search: currentSearch,
+        const { data } = await axios.get(
+            "/admin/api/requests/user-verifications",
+            {
+                params: {
+                    page: currentPage,
+                    search: currentSearch,
+                },
             },
-        });
+        );
 
         return data;
     };
 
     const { data, isLoading, isFetching, isError } = useQuery({
         queryKey: ["user-verifications", page, debouncedSearch],
-
         queryFn: fetchUserVerification,
-
         placeholderData: (previousData) => previousData,
-
         staleTime: 30_000,
     });
-
-    /*
-     * ----------------------------------------
-     * View
-     * ----------------------------------------
-     */
 
     const handleView = useCallback(async (user: User) => {
         try {
             const { data } = await axios.get(
-                `/api/requests/user-verifications/${user.id}`,
+                `/admin/api/requests/user-verifications/${user.id}`,
             );
 
             setSelectedUser(data.data);
@@ -524,12 +393,6 @@ export default function UserVerification() {
             console.error("Failed to load verification", error);
         }
     }, []);
-
-    /*
-     * ----------------------------------------
-     * Approve
-     * ----------------------------------------
-     */
 
     const approveMutation = useMutation({
         mutationFn: async ({
@@ -540,7 +403,7 @@ export default function UserVerification() {
             isResident: boolean;
         }) => {
             const { data } = await axios.post(
-                `/api/requests/user-verifications/${verificationId}/approve`,
+                `/admin/api/requests/user-verifications/${verificationId}/approve`,
                 {
                     is_resident: isResident,
                 },
@@ -548,7 +411,6 @@ export default function UserVerification() {
 
             return data;
         },
-
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["user-verifications"],
@@ -558,17 +420,10 @@ export default function UserVerification() {
             setSelectedUser(null);
             setResidentStatus("");
         },
-
         onError: (error) => {
             console.error("Approval failed", error);
         },
     });
-
-    /*
-     * ----------------------------------------
-     * Reject
-     * ----------------------------------------
-     */
 
     const rejectMutation = useMutation({
         mutationFn: async ({
@@ -579,7 +434,7 @@ export default function UserVerification() {
             remarks: string;
         }) => {
             const { data } = await axios.post(
-                `/api/requests/user-verifications/${verificationId}/reject`,
+                `/admin/api/requests/user-verifications/${verificationId}/reject`,
                 {
                     remarks,
                 },
@@ -587,7 +442,6 @@ export default function UserVerification() {
 
             return data;
         },
-
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ["user-verifications"],
@@ -598,27 +452,13 @@ export default function UserVerification() {
             setSelectedUser(null);
             setRemarks("");
         },
-
         onError: (error) => {
             console.error("Rejection failed", error);
         },
     });
 
-    /*
-     * ----------------------------------------
-     * Columns
-     * ----------------------------------------
-     */
-
     const columns = useMemo(() => createColumns(handleView), [handleView]);
-
     const verification = selectedUser?.latest_verification;
-
-    /*
-     * ----------------------------------------
-     * Error state
-     * ----------------------------------------
-     */
 
     if (isError) {
         return (
@@ -645,19 +485,11 @@ export default function UserVerification() {
         );
     }
 
-    /*
-     * ----------------------------------------
-     * Render
-     * ----------------------------------------
-     */
-
     return (
         <>
             <div className="space-y-5">
-                {/* Page Header */}
                 <PageHeader />
 
-                {/* Table */}
                 <Card className="overflow-hidden border-border/60 shadow-sm">
                     <div className="p-4 sm:p-6">
                         <DataTable
@@ -681,10 +513,6 @@ export default function UserVerification() {
                 </Card>
             </div>
 
-            {/* ===================================================== */}
-            {/* VERIFICATION SHEET */}
-            {/* ===================================================== */}
-
             <Sheet
                 open={sheetOpen}
                 onOpenChange={(open) => {
@@ -702,11 +530,9 @@ export default function UserVerification() {
                 >
                     {selectedUser && verification && (
                         <>
-                            {/* Sheet Header */}
                             <div className="border-b px-6 py-5">
                                 <SheetHeader>
                                     <div className="flex items-start gap-4">
-                                        {/* Avatar */}
                                         <div className="flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-xl border bg-muted">
                                             {selectedUser.profile_picture ? (
                                                 <img
@@ -744,13 +570,8 @@ export default function UserVerification() {
                                 </SheetHeader>
                             </div>
 
-                            {/* Sheet Body */}
                             <div className="flex-1 overflow-y-auto">
                                 <div className="space-y-7 px-6 py-6">
-                                    {/* ================================= */}
-                                    {/* REVIEW NOTICE */}
-                                    {/* ================================= */}
-
                                     {verification.status === "pending" && (
                                         <div className="flex gap-3 rounded-xl border border-orange-200 bg-orange-50 p-4 dark:border-orange-900 dark:bg-orange-950/30">
                                             <ShieldCheck className="mt-0.5 size-5 shrink-0 text-orange-600" />
@@ -770,10 +591,6 @@ export default function UserVerification() {
                                         </div>
                                     )}
 
-                                    {/* ================================= */}
-                                    {/* USER INFORMATION */}
-                                    {/* ================================= */}
-
                                     <DetailSection
                                         title="Resident Information"
                                         description="Information currently stored in the resident's account."
@@ -783,43 +600,36 @@ export default function UserVerification() {
                                                 label="ID Number"
                                                 value={selectedUser.id_number}
                                             />
-
                                             <Info
                                                 label="Full Name"
                                                 value={getFullName(
                                                     selectedUser,
                                                 )}
                                             />
-
                                             <Info
                                                 label="Sex"
                                                 value={selectedUser.sex}
                                             />
-
                                             <Info
                                                 label="Birth Date"
                                                 value={selectedUser.birth_date}
                                             />
-
                                             <Info
                                                 label="Marital Status"
                                                 value={
                                                     selectedUser.marital_status
                                                 }
                                             />
-
                                             <Info
                                                 label="Religion"
                                                 value={selectedUser.religion}
                                             />
-
                                             <Info
                                                 label="Mobile"
                                                 value={
                                                     selectedUser.mobile_number
                                                 }
                                             />
-
                                             <Info
                                                 label="Email"
                                                 value={selectedUser.email}
@@ -842,10 +652,6 @@ export default function UserVerification() {
                                         </div>
                                     </DetailSection>
 
-                                    {/* ================================= */}
-                                    {/* SUBMITTED ID */}
-                                    {/* ================================= */}
-
                                     <DetailSection
                                         title="Submitted Identification"
                                         description="Information extracted from the submitted identification."
@@ -855,27 +661,22 @@ export default function UserVerification() {
                                                 label="ID Type"
                                                 value={verification.id_type}
                                             />
-
                                             <Info
                                                 label="ID Number"
                                                 value={verification.id_number}
                                             />
-
                                             <Info
                                                 label="First Name"
                                                 value={verification.first_name}
                                             />
-
                                             <Info
                                                 label="Middle Name"
                                                 value={verification.middle_name}
                                             />
-
                                             <Info
                                                 label="Last Name"
                                                 value={verification.last_name}
                                             />
-
                                             <Info
                                                 label="Date of Birth"
                                                 value={
@@ -891,10 +692,6 @@ export default function UserVerification() {
                                             </div>
                                         </div>
                                     </DetailSection>
-
-                                    {/* ================================= */}
-                                    {/* DOCUMENTS */}
-                                    {/* ================================= */}
 
                                     <DetailSection
                                         title="Identification Documents"
@@ -924,10 +721,6 @@ export default function UserVerification() {
                                         </div>
                                     </DetailSection>
 
-                                    {/* ================================= */}
-                                    {/* PREVIOUS REMARKS */}
-                                    {/* ================================= */}
-
                                     {verification.remarks && (
                                         <DetailSection
                                             title="Previous Remarks"
@@ -947,14 +740,9 @@ export default function UserVerification() {
                                 </div>
                             </div>
 
-                            {/* ================================= */}
-                            {/* ACTION FOOTER */}
-                            {/* ================================= */}
-
                             {verification.status === "pending" && (
                                 <div className="border-t bg-background px-6 py-4">
                                     <div className="space-y-4">
-                                        {/* Resident Status */}
                                         <div className="space-y-2">
                                             <div>
                                                 <p className="text-sm font-medium">
@@ -995,7 +783,6 @@ export default function UserVerification() {
                                             </Select>
                                         </div>
 
-                                        {/* Actions */}
                                         <div className="grid grid-cols-2 gap-3">
                                             <Button
                                                 variant="outline"
@@ -1060,10 +847,6 @@ export default function UserVerification() {
                     )}
                 </SheetContent>
             </Sheet>
-
-            {/* ===================================================== */}
-            {/* REJECT DIALOG */}
-            {/* ===================================================== */}
 
             <AlertDialog
                 open={rejectOpen}
@@ -1142,12 +925,6 @@ export default function UserVerification() {
     );
 }
 
-/*
-|--------------------------------------------------------------------------
-| Page Header
-|--------------------------------------------------------------------------
-*/
-
 function PageHeader() {
     return (
         <div className="flex flex-col gap-1">
@@ -1162,12 +939,6 @@ function PageHeader() {
         </div>
     );
 }
-
-/*
-|--------------------------------------------------------------------------
-| Detail Section
-|--------------------------------------------------------------------------
-*/
 
 function DetailSection({
     title,
@@ -1195,12 +966,6 @@ function DetailSection({
     );
 }
 
-/*
-|--------------------------------------------------------------------------
-| Info
-|--------------------------------------------------------------------------
-*/
-
 function Info({ label, value }: { label: string; value?: string | null }) {
     return (
         <div className="min-w-0 space-y-1">
@@ -1210,12 +975,6 @@ function Info({ label, value }: { label: string; value?: string | null }) {
         </div>
     );
 }
-
-/*
-|--------------------------------------------------------------------------
-| Verification Image
-|--------------------------------------------------------------------------
-*/
 
 function VerificationImage({
     title,
@@ -1236,14 +995,7 @@ function VerificationImage({
                         href={imageUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="
-                            rounded-md
-                            p-1.5
-                            text-muted-foreground
-                            transition-colors
-                            hover:bg-muted
-                            hover:text-foreground
-                        "
+                        className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                         title={`Open ${title}`}
                     >
                         <ExternalLink className="size-4" />
@@ -1253,21 +1005,11 @@ function VerificationImage({
 
             <div className="group relative overflow-hidden rounded-xl border bg-muted/30">
                 {imageUrl ? (
-                    <>
-                        <img
-                            src={imageUrl}
-                            alt={title}
-                            className="
-                                max-h-72
-                                min-h-40
-                                w-full
-                                object-contain
-                                transition-transform
-                                duration-300
-                                group-hover:scale-[1.02]
-                            "
-                        />
-                    </>
+                    <img
+                        src={imageUrl}
+                        alt={title}
+                        className="max-h-72 min-h-40 w-full object-contain transition-transform duration-300 group-hover:scale-[1.02]"
+                    />
                 ) : (
                     <div className="flex min-h-40 flex-col items-center justify-center gap-2 text-center">
                         <div className="flex size-10 items-center justify-center rounded-full bg-muted">
