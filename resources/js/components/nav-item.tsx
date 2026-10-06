@@ -92,16 +92,6 @@ const navAdmin: NavGroup[] = [
             },
         ],
     },
-    {
-        name: "Requests",
-        items: [
-            {
-                title: "User Verifications",
-                url: "/admin/requests/user-verifications",
-                icon: UserCheck,
-            },
-        ],
-    },
 ];
 
 export default function NavItem({

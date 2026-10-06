@@ -39,10 +39,16 @@ return [
         'client_id' => env('GOOGLE_CLIENT_ID'),
         'client_secret' => env('GOOGLE_CLIENT_SECRET'),
         'refresh_token' => env('GOOGLE_REFRESH_TOKEN'),
-        
+
         'ordinance_folder_id' => env('GOOGLE_DRIVE_ORDINANCE_FOLDER_ID'),
         'link_system_folder_id' => env('GOOGLE_DRIVE_LINK_SYSTEM_FOLDER_ID'),
         'user_verification_folder_id' => env('GOOGLE_DRIVE_USER_VERIFICATION_FOLDER_ID'),
+    ],
+
+    'didit' => [
+        'api_key' => env('DIDIT_API_KEY'),
+        'workflow_id' => env('DIDIT_WORKFLOW_ID'),
+        'webhook_secret' => env('DIDIT_WEBHOOK_SECRET'),
     ],
 
 ];

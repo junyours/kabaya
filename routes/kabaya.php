@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\DiditController;
 use App\Http\Controllers\Kabaya\Mobile\App\DemographicController;
 use App\Http\Controllers\Kabaya\Mobile\App\LinkSystemController;
 use App\Http\Controllers\Kabaya\Mobile\App\Services\SBController;
@@ -38,6 +39,8 @@ Route::middleware(['auth:sanctum'])->prefix('kabaya/mobile')->group(function () 
   Route::post('/forgot-pin', [ForgotController::class, 'forgotPin']);
   Route::post('/forgot/verify-otp', [ForgotController::class, 'verifyOtp']);
   Route::post('/forgot/reset-pin', [ForgotController::class, 'resetPin']);
+
+  Route::post('/didit/session', [DiditController::class, 'createSession']);
 
   Route::post('/verification/personal', [VerificationController::class, 'verificationPersonal']);
   Route::post('/verification/address', [VerificationController::class, 'verificationAddress']);

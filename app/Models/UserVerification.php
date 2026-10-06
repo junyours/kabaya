@@ -16,23 +16,13 @@ class UserVerification extends Model
         'user_id',
         'id_type',
         'id_number',
-        'last_name',
-        'first_name',
-        'middle_name',
+        'full_name',
         'date_of_birth',
         'address',
         'id_front_image',
         'id_back_image',
         'face_image',
         'status',
-        'remarks',
-        'verified_at',
-        'rejected_at',
-    ];
-
-    protected $casts = [
-        'verified_at' => 'datetime',
-        'rejected_at' => 'datetime',
     ];
 
     public function user(): BelongsTo

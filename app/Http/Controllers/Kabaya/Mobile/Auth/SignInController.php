@@ -17,6 +17,7 @@ class SignInController extends Controller
         ]);
 
         $user = User::where('email', $data['email'])
+            ->where('role', 'user')
             ->whereNotNull('email_verified_at')
             ->first();
 

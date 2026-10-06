@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\External\UserController;
+use App\Http\Controllers\DiditWebhookController;
 
 Route::prefix('external')
   ->middleware('external.api')
@@ -11,5 +12,7 @@ Route::prefix('external')
       'getVerifiedUserByIdNumber'
     ]);
   });
+
+Route::post('/webhooks/didit', [DiditWebhookController::class, 'handle']);
 
 require __DIR__ . '/kabaya.php';

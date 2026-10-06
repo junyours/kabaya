@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('icon')->nullable();
             $table->string('href');
             $table->boolean('is_active');
+            $table->boolean('is_open');
             $table->timestamps();
         });
     }
