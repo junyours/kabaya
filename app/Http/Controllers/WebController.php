@@ -16,4 +16,9 @@ class WebController extends Controller
     {
         return Inertia::render('privacy-policy');
     }
+
+    public function deleteAccount()
+    {
+        return Inertia::render('delete-account');
+    }
 }

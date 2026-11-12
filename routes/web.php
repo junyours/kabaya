@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [WebController::class, 'home']);
 Route::get('/privacy-policy', [WebController::class, 'privacyPolicy']);
+Route::get('/delete-account', [WebController::class, 'deleteAccount']);
 
 Route::middleware(['auth:sanctum'])->prefix('settings')->group(function () {
   Route::get('/change-password', [ChangePasswordController::class, 'index']);
