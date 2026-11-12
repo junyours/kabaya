@@ -7,6 +7,7 @@ import {
     Database,
     Mail,
     ChevronRight,
+    Fingerprint,
 } from "lucide-react";
 
 const sections = [
@@ -18,7 +19,8 @@ const sections = [
             <>
                 <p>
                     Depending on the features you use, Kabaya may collect
-                    information necessary to provide its services.
+                    information necessary to provide its services, manage
+                    resident accounts, and verify user identities.
                 </p>
 
                 <h3>Personal Information</h3>
@@ -30,18 +32,40 @@ const sections = [
                     <li>Email address</li>
                     <li>Date of birth</li>
                     <li>Address or municipality information</li>
-                    <li>Civil status</li>
+                    <li>Sex and civil status, where applicable</li>
+                    <li>Other information provided during registration</li>
                 </ul>
 
-                <h3>Account Information</h3>
+                <h3>Account and Authentication Information</h3>
 
                 <ul>
-                    <li>Username</li>
-                    <li>Login credentials</li>
-                    <li>One-time passwords (OTP)</li>
-                    <li>Account verification status</li>
-                    <li>Authentication and security information</li>
+                    <li>Username and account identifiers</li>
+                    <li>Login credentials and authentication information</li>
+                    <li>One-time passwords (OTP) and verification status</li>
+                    <li>Account security and access information</li>
+                    <li>Device identifiers when used for account security</li>
                 </ul>
+
+                <h3>Identity Verification Information</h3>
+
+                <ul>
+                    <li>
+                        Images of government-issued identification documents
+                    </li>
+                    <li>Information extracted from identification documents</li>
+                    <li>Selfie images and face captures</li>
+                    <li>Liveness verification information, where enabled</li>
+                    <li>Identity and facial verification results</li>
+                    <li>
+                        Verification session identifiers and status information
+                    </li>
+                </ul>
+
+                <p>
+                    The information collected depends on the features you access
+                    and the information required to complete your account
+                    registration and verification.
+                </p>
             </>
         ),
     },
@@ -54,15 +78,23 @@ const sections = [
                 <p>We use collected information to:</p>
 
                 <ul>
-                    <li>Create and manage user accounts</li>
+                    <li>Create, manage, and maintain user accounts</li>
                     <li>Verify user identity and residency</li>
-                    <li>Provide Kabaya services and features</li>
-                    <li>Authenticate users</li>
-                    <li>Process OTP and security verification</li>
+                    <li>Provide Kabaya services and application features</li>
+                    <li>Authenticate users and secure account access</li>
+                    <li>
+                        Process OTP and other security verification procedures
+                    </li>
                     <li>Verify identification documents</li>
-                    <li>Improve application functionality</li>
-                    <li>Prevent unauthorized access and misuse</li>
-                    <li>Maintain application security</li>
+                    <li>
+                        Perform facial comparison and liveness verification
+                        where enabled
+                    </li>
+                    <li>
+                        Prevent fraudulent registrations and unauthorized access
+                    </li>
+                    <li>Maintain application and information security</li>
+                    <li>Communicate important account and service updates</li>
                     <li>Comply with applicable laws and regulations</li>
                 </ul>
 
@@ -80,7 +112,8 @@ const sections = [
             <>
                 <p>
                     Kabaya may request access to your device camera when a
-                    feature requires it.
+                    feature requires it. Camera access is used only when you
+                    actively use a camera-related feature.
                 </p>
 
                 <p>Camera access may be used for:</p>
@@ -88,9 +121,16 @@ const sections = [
                 <ul>
                     <li>Identification document scanning</li>
                     <li>Optical character recognition (OCR)</li>
-                    <li>Face recognition or identity verification</li>
-                    <li>Other security and verification features</li>
+                    <li>Capturing identification document images</li>
+                    <li>Taking selfies for identity verification</li>
+                    <li>Facial comparison and liveness verification</li>
                 </ul>
+
+                <p>
+                    Images captured during identity verification may be
+                    transmitted securely to Kabaya's servers and Didit,
+                    depending on the verification workflow.
+                </p>
 
                 <p>
                     Kabaya does not continuously access or record your camera
@@ -102,31 +142,68 @@ const sections = [
     {
         id: "biometric",
         title: "Biometric and Face Recognition",
-        icon: Lock,
+        icon: Fingerprint,
         content: (
             <>
                 <p>
-                    Where applicable, Kabaya may use face recognition or
-                    biometric-related technology to assist with identity
-                    verification and account security.
+                    Kabaya uses biometric-related technology to support identity
+                    verification, facial comparison, liveness detection, and
+                    account security.
                 </p>
 
                 <p>
-                    Biometric information is treated as sensitive information
-                    and is handled only for legitimate verification and security
-                    purposes.
+                    When facial verification is required, your selfie, face
+                    images, liveness captures, and information derived from
+                    facial analysis may be processed to compare your face with
+                    the photograph on your identification document and help
+                    verify your identity.
+                </p>
+
+                <h3>Biometric Information Processing</h3>
+
+                <ul>
+                    <li>Facial images and selfie captures</li>
+                    <li>Facial comparison results</li>
+                    <li>Liveness detection results</li>
+                    <li>
+                        Other verification signals generated by the configured
+                        workflow
+                    </li>
+                </ul>
+
+                <p>
+                    This information is treated as sensitive personal
+                    information and is processed for identity verification,
+                    fraud prevention, and security purposes.
                 </p>
 
                 <p>
-                    We do not use biometric information for advertising or
+                    Information necessary to complete facial verification may be
+                    securely transmitted to Didit for processing. Didit may
+                    generate facial comparison results, liveness results, and
+                    other verification signals depending on the configured
+                    workflow.
+                </p>
+
+                <p>
+                    Kabaya does not use biometric information for advertising or
                     unrelated purposes.
                 </p>
 
+                <h3>Device Biometric Authentication</h3>
+
                 <p>
-                    Where possible, biometric processing may be performed
-                    locally on the user's device. Information necessary to
-                    complete verification may be securely transmitted to our
-                    servers when required.
+                    If you enable fingerprint or facial authentication through
+                    your device, Kabaya may use your device's supported
+                    biometric authentication functionality. The biometric
+                    authentication itself is handled by the device's operating
+                    system.
+                </p>
+
+                <p>
+                    Kabaya does not receive your device's stored fingerprint or
+                    Face ID biometric template through this authentication
+                    process.
                 </p>
             </>
         ),
@@ -138,11 +215,32 @@ const sections = [
         content: (
             <>
                 <p>
-                    If you use the ID scanning feature, Kabaya may process
-                    information obtained from your identification document.
+                    If you use the ID scanning or identity verification feature,
+                    Kabaya may process information obtained from your
+                    identification document.
                 </p>
 
-                <p>This information may be used to:</p>
+                <h3>Information That May Be Processed</h3>
+
+                <ul>
+                    <li>
+                        Images of the front and back of your identification
+                        document
+                    </li>
+                    <li>Name and identification number</li>
+                    <li>
+                        Date of birth and other information displayed on your ID
+                    </li>
+                    <li>
+                        Document type, expiration date, and document details
+                    </li>
+                    <li>
+                        Information extracted through optical character
+                        recognition (OCR)
+                    </li>
+                </ul>
+
+                <h3>Purpose of Processing</h3>
 
                 <ul>
                     <li>Identify the document holder</li>
@@ -153,8 +251,100 @@ const sections = [
                 </ul>
 
                 <p>
+                    Identification information may be processed by Kabaya and
+                    transmitted to Didit when required by the configured
+                    identity verification workflow.
+                </p>
+
+                <p>
                     Users should only scan identification documents that belong
                     to them or that they are legally authorized to submit.
+                </p>
+            </>
+        ),
+    },
+    {
+        id: "didit",
+        title: "Didit Identity Verification",
+        icon: ShieldCheck,
+        content: (
+            <>
+                <p>
+                    Kabaya uses Didit as a third-party identity verification
+                    service provider to help verify the identity of residents
+                    and prevent fraudulent registrations.
+                </p>
+
+                <p>
+                    When you complete identity verification, information may be
+                    securely transmitted to Didit for processing, depending on
+                    the verification steps configured by Kabaya.
+                </p>
+
+                <h3>Information That May Be Processed by Didit</h3>
+
+                <ul>
+                    <li>
+                        Images of your government-issued identification document
+                    </li>
+                    <li>
+                        Personal information extracted from your identification
+                        document
+                    </li>
+                    <li>Selfie images and face captures</li>
+                    <li>
+                        Liveness verification information, such as images or
+                        video frames
+                    </li>
+                    <li>Facial comparison results and verification outcomes</li>
+                    <li>Verification session identifiers</li>
+                    <li>
+                        Device, browser, IP address, and security-related
+                        information, where enabled
+                    </li>
+                </ul>
+
+                <h3>Purpose of Processing</h3>
+
+                <ul>
+                    <li>Verify your identity and identification document</li>
+                    <li>Compare your selfie with the photograph on your ID</li>
+                    <li>
+                        Perform liveness checks to help detect spoofing or
+                        impersonation
+                    </li>
+                    <li>
+                        Detect suspicious or potentially fraudulent verification
+                        attempts
+                    </li>
+                    <li>Return verification results to Kabaya</li>
+                </ul>
+
+                <p>
+                    Didit processes verification information according to the
+                    configured verification workflow and applicable service
+                    terms. Didit may also process certain information for its
+                    own security, fraud prevention, and legal compliance
+                    purposes, as described in its privacy notices.
+                </p>
+
+                <p>
+                    Verification results may be transmitted to Kabaya and used
+                    to determine your account or resident verification status.
+                </p>
+
+                <p>
+                    For additional information about Didit's data handling
+                    practices, please review its{" "}
+                    <a
+                        href="https://didit.me/terms/verification-privacy-notice/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="font-medium text-[#d91656] underline"
+                    >
+                        Verification Privacy Notice
+                    </a>
+                    .
                 </p>
             </>
         ),
@@ -165,30 +355,43 @@ const sections = [
         icon: ShieldCheck,
         content: (
             <>
-                <p>We do not sell or rent your personal information.</p>
-
                 <p>
-                    Information may be shared only when necessary to provide
-                    Kabaya services, operate connected systems, protect users,
-                    or comply with legal requirements.
+                    We do not sell or rent your personal information. We may
+                    disclose or transmit personal information to authorized
+                    service providers when necessary to provide Kabaya services,
+                    verify identities, maintain application security, or comply
+                    with legal requirements.
                 </p>
 
-                <p>This may include:</p>
+                <h3>Information May Be Disclosed To</h3>
 
                 <ul>
                     <li>Authorized Kabaya administrators</li>
                     <li>Authorized municipal or government systems</li>
                     <li>
-                        Service providers supporting application infrastructure
+                        Didit, our identity verification service provider, for
+                        processing identification documents, selfies, facial
+                        verification, liveness checks, and verification results
                     </li>
                     <li>
-                        Authentication, hosting, database, or security providers
+                        Service providers supporting application hosting,
+                        database, authentication, and infrastructure
+                    </li>
+                    <li>
+                        Security and technical service providers necessary to
+                        maintain application operations
                     </li>
                     <li>
                         Law enforcement or government authorities when legally
                         required
                     </li>
                 </ul>
+
+                <p>
+                    Third-party service providers may process information
+                    according to their applicable privacy notices, contractual
+                    obligations, and legal requirements.
+                </p>
             </>
         ),
     },
@@ -200,18 +403,22 @@ const sections = [
             <>
                 <p>
                     We use reasonable administrative, technical, and
-                    organizational measures to protect your information.
+                    organizational measures to protect your information against
+                    unauthorized access, disclosure, alteration, loss, or
+                    misuse.
                 </p>
 
-                <p>These measures are designed to protect against:</p>
+                <p>These measures may include:</p>
 
                 <ul>
-                    <li>Unauthorized access</li>
-                    <li>Unauthorized disclosure</li>
-                    <li>Loss</li>
-                    <li>Misuse</li>
-                    <li>Alteration</li>
-                    <li>Destruction</li>
+                    <li>Encrypted connections when transmitting information</li>
+                    <li>Authentication and access controls</li>
+                    <li>Restricted access to sensitive information</li>
+                    <li>Security monitoring and account protection</li>
+                    <li>
+                        Secure handling of identification documents and
+                        verification information
+                    </li>
                 </ul>
 
                 <p>
@@ -228,15 +435,28 @@ const sections = [
         content: (
             <>
                 <p>
-                    We retain personal information only for as long as
-                    reasonably necessary to provide Kabaya services and fulfill
-                    legal or security requirements.
+                    Kabaya retains personal information only for as long as
+                    necessary to provide its services, maintain resident
+                    records, complete identity verification, protect account
+                    security, and comply with applicable legal requirements.
                 </p>
 
                 <p>
-                    When information is no longer required, it may be deleted,
-                    anonymized, or securely disposed of in accordance with
-                    applicable policies and legal requirements.
+                    Information processed through Didit may be retained
+                    according to the retention settings configured by Kabaya,
+                    applicable service terms, and legal requirements.
+                </p>
+
+                <p>
+                    When information is no longer necessary, Kabaya may delete
+                    or securely dispose of it, subject to applicable legal
+                    retention obligations.
+                </p>
+
+                <p>
+                    Users may request deletion of their personal information
+                    through the available account deletion process. Certain
+                    information may need to be retained where required by law.
                 </p>
             </>
         ),
@@ -248,8 +468,8 @@ const sections = [
         content: (
             <>
                 <p>
-                    Depending on applicable laws and regulations, you may have
-                    the right to:
+                    Subject to applicable data protection laws and regulations,
+                    you may have the right to:
                 </p>
 
                 <ul>
@@ -262,6 +482,12 @@ const sections = [
                         Raise concerns about the processing of your information
                     </li>
                 </ul>
+
+                <p>
+                    Requests may be subject to identity verification and
+                    applicable legal or government record-retention
+                    requirements.
+                </p>
             </>
         ),
     },
@@ -283,12 +509,21 @@ const sections = [
         title: "Third-Party Services",
         icon: Database,
         content: (
-            <p>
-                Kabaya may use third-party services to support application
-                functionality, including hosting, authentication, analytics,
-                security, or infrastructure services. These providers may
-                process limited information necessary to provide their services.
-            </p>
+            <>
+                <p>
+                    Kabaya may use third-party services to support application
+                    functionality, including hosting, authentication, identity
+                    verification, security, and infrastructure services. These
+                    providers may process information necessary to provide their
+                    services.
+                </p>
+
+                <p>
+                    These services operate under their applicable privacy
+                    policies, service agreements, and data protection
+                    requirements.
+                </p>
+            </>
         ),
     },
     {
@@ -298,10 +533,48 @@ const sections = [
         content: (
             <p>
                 Kabaya may provide links or access to external websites,
-                applications, or connected systems. Kabaya is not responsible
-                for the privacy practices, content, or security of third-party
-                services that are not operated by us.
+                applications, or connected systems. These external services may
+                have their own privacy policies and data handling practices.
+                Kabaya is not responsible for the privacy practices, content, or
+                security of third-party services that are not operated by us.
             </p>
+        ),
+    },
+    {
+        id: "deletion",
+        title: "Account and Data Deletion",
+        icon: Database,
+        content: (
+            <>
+                <p>
+                    You may request deletion of your Kabaya account and
+                    associated personal information through the account deletion
+                    process provided by Kabaya.
+                </p>
+
+                <p>
+                    When a deletion request is received, it will be reviewed and
+                    processed in accordance with applicable policies and legal
+                    requirements.
+                </p>
+
+                <p>
+                    Some information may be retained when necessary to comply
+                    with legal obligations, maintain official municipal records,
+                    resolve disputes, or protect application security.
+                </p>
+
+                <p>
+                    Please visit our{" "}
+                    <a
+                        href="/delete-account"
+                        className="font-medium text-[#d91656] underline"
+                    >
+                        Account Deletion page
+                    </a>{" "}
+                    for instructions on submitting a request.
+                </p>
+            </>
         ),
     },
     {
@@ -375,14 +648,16 @@ export default function PrivacyPolicy() {
                             Kabaya (“we,” “our,” or “the App”) respects your
                             privacy and is committed to protecting your personal
                             information. This Privacy Policy explains how Kabaya
-                            collects, uses, stores, and protects information
-                            when you use our mobile application and related
-                            services.
+                            collects, uses, stores, shares, and protects
+                            information when you use our mobile application and
+                            related services.
                         </p>
 
                         <p className="mt-5 leading-7 text-gray-600">
-                            By using Kabaya, you agree to the practices
-                            described in this Privacy Policy.
+                            By using Kabaya, you acknowledge this Privacy
+                            Policy. Where required by applicable law, we will
+                            provide additional notices and obtain the necessary
+                            consent before processing your personal information.
                         </p>
                     </section>
 
@@ -468,7 +743,7 @@ export default function PrivacyPolicy() {
                         reserved.
                     </div>
 
-                    <div>Last updated September 1, 2026</div>
+                    <div>Last updated: November 12, 2026</div>
                 </div>
             </footer>
 
@@ -494,6 +769,10 @@ export default function PrivacyPolicy() {
                 .policy-content li {
                     margin-bottom: 7px;
                     padding-left: 4px;
+                }
+
+                .policy-content a {
+                    text-underline-offset: 3px;
                 }
             `}</style>
         </div>
