@@ -5,6 +5,7 @@ use App\Http\Controllers\Kabaya\Mobile\App\DemographicController;
 use App\Http\Controllers\Kabaya\Mobile\App\LinkSystemController;
 use App\Http\Controllers\Kabaya\Mobile\App\Services\SBController;
 use App\Http\Controllers\Kabaya\Mobile\App\Settings\ChangePinController;
+use App\Http\Controllers\Kabaya\Mobile\App\Settings\DeleteAccountController;
 use App\Http\Controllers\Kabaya\Mobile\App\VerificationController;
 use App\Http\Controllers\Kabaya\Mobile\Auth\ForgotController;
 use App\Http\Controllers\Kabaya\Mobile\Auth\LoginController;
@@ -55,6 +56,9 @@ Route::middleware(['auth:sanctum'])->prefix('kabaya/mobile')->group(function () 
   Route::post('/settings/change-pin', [ChangePinController::class, 'changePin']);
 
   Route::get('/demographics', [DemographicController::class, 'index']);
+
+  Route::post('/delete-request', [DeleteAccountController::class, 'store']);
+  Route::get('/delete-request', [DeleteAccountController::class, 'status']);
 });
 
 Route::middleware(['guest'])->prefix('kabaya/mobile')->group(function () {
@@ -65,6 +69,8 @@ Route::middleware(['guest'])->prefix('kabaya/mobile')->group(function () {
 
   Route::post('/sign-in', [SignInController::class, 'signIn']);
   Route::post('/sign-in/verify-otp', [SignInController::class, 'verifyOtp']);
+
+  Route::post('/login-guest', [SignInController::class, 'loginGuest']);
 });
 
 Route::post('/resend-otp', [GlobalController::class, 'resendOtp']);

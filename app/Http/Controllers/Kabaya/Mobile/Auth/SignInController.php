@@ -47,7 +47,26 @@ class SignInController extends Controller
                 'device_id' => $request->device_id,
             ],
             [
-                'required_password' => true,
+                'required_password' => false,
+            ]
+        );
+
+        return response()->json([
+            'token' => $user->createToken($request->token_name, ['*'], now()->addWeek())->plainTextToken
+        ]);
+    }
+
+    public function loginGuest(Request $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        UserSession::updateOrCreate(
+            [
+                'user_id' => $user->id,
+                'device_id' => $request->device_id,
+            ],
+            [
+                'required_password' => false,
             ]
         );
 

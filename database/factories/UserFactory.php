@@ -23,10 +23,17 @@ class UserFactory extends Factory
      */
     public function definition(): array
     {
+        // return [
+        //     'user_name' => 'kabaya',
+        //     'role' => 'super_admin',
+        //     'password' => Hash::make('P@ssw0rd'),
+        // ];
         return [
-            'user_name' => 'kabaya',
-            'role' => 'super_admin',
-            'password' => Hash::make('P@ssw0rd'),
+            'id_number' => '0000-00-0000',
+            'first_name' => 'Guest',
+            'last_name' => 'Account',
+            'email' => 'guest@example.com',
+            'password' => Hash::make('1234'),
         ];
     }
 
